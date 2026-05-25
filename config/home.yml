@@ -227,51 +227,61 @@
           widgets:
             - type: rss
               title: r/CHICubs
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/CHICubs/.rss
             - type: rss
               title: r/mlb
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/mlb/.rss
             - type: rss
               title: r/roanoke
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/roanoke/.rss
             - type: rss
               title: r/typewriters
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/typewriters/.rss
             - type: rss
               title: r/stationery
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/stationery/.rss
             - type: rss
               title: r/virginia
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/virginia/.rss
             - type: rss
               title: r/WritingHub
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/WritingHub/.rss
             - type: rss
               title: r/Wildcats
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/Wildcats/.rss
             - type: rss
               title: r/cyberDeck
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/cyberDeck/.rss
             - type: rss
               title: r/BookshelvesDetective
+              style: horizontal-cards
               limit: 10
               feeds:
                 - url: https://www.reddit.com/r/BookshelvesDetective/.rss
