@@ -1,0 +1,299 @@
+- name: Home
+  # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
+  # hide-desktop-navigation: true
+  columns:
+    - size: small
+      widgets:
+        - type: calendar
+          first-day-of-week: monday
+
+        - type: iframe
+          title: Upcoming Events
+          class: calendar-embed
+          # Using Agenda view for the provided Family Calendar
+          source: https://calendar.google.com/calendar/embed?src=family14631522457169178206%40group.calendar.google.com&ctz=America%2FNew_York&mode=AGENDA&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0
+          height: 300
+
+        - type: group
+          widgets:
+            - type: custom-api
+              title: NL Central
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&divisionId=205&standingsTypes=regularSeason
+              cache: 15m
+              template: |
+                <ul class="list list-gap-10">
+                  {{ range .JSON.Array "records.1.teamRecords" }}
+                  <li class="flex items-center gap-15">
+                    <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                      <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
+                    </div>
+                    <div class="flex-grow min-w-0">
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h4 color-highlight text-truncate">{{ .String "team.name" }}</span>
+                        <span class="size-h6 color-paragraph">{{ .String "gamesBack" }} GB</span>
+                      </div>
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h6 color-paragraph">{{ .Int "wins" }}-{{ .Int "losses" }}</span>
+                        <span class="size-h6 {{ if eq (slice (.String "streak.streakCode") 0 1) "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .String "streak.streakCode" }}</span>
+                      </div>
+                    </div>
+                  </li>
+                  {{ end }}
+                </ul>
+            - type: custom-api
+              title: AL Central
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&divisionId=202&standingsTypes=regularSeason
+              cache: 15m
+              template: |
+                <ul class="list list-gap-10">
+                  {{ range .JSON.Array "records.1.teamRecords" }}
+                  <li class="flex items-center gap-15">
+                    <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                      <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
+                    </div>
+                    <div class="flex-grow min-w-0">
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h4 color-highlight text-truncate">{{ .String "team.name" }}</span>
+                        <span class="size-h6 color-paragraph">{{ .String "gamesBack" }} GB</span>
+                      </div>
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h6 color-paragraph">{{ .Int "wins" }}-{{ .Int "losses" }}</span>
+                        <span class="size-h6 {{ if eq (slice (.String "streak.streakCode") 0 1) "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .String "streak.streakCode" }}</span>
+                      </div>
+                    </div>
+                  </li>
+                  {{ end }}
+                </ul>
+            - type: custom-api
+              title: NL East
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&divisionId=204&standingsTypes=regularSeason
+              cache: 15m
+              template: |
+                <ul class="list list-gap-10">
+                  {{ range .JSON.Array "records.0.teamRecords" }}
+                  <li class="flex items-center gap-15">
+                    <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                      <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
+                    </div>
+                    <div class="flex-grow min-w-0">
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h4 color-highlight text-truncate">{{ .String "team.name" }}</span>
+                        <span class="size-h6 color-paragraph">{{ .String "gamesBack" }} GB</span>
+                      </div>
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h6 color-paragraph">{{ .Int "wins" }}-{{ .Int "losses" }}</span>
+                        <span class="size-h6 {{ if eq (slice (.String "streak.streakCode") 0 1) "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .String "streak.streakCode" }}</span>
+                      </div>
+                    </div>
+                  </li>
+                  {{ end }}
+                </ul>
+            - type: custom-api
+              title: AL East
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&divisionId=201&standingsTypes=regularSeason
+              cache: 15m
+              template: |
+                <ul class="list list-gap-10">
+                  {{ range .JSON.Array "records.0.teamRecords" }}
+                  <li class="flex items-center gap-15">
+                    <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                      <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
+                    </div>
+                    <div class="flex-grow min-w-0">
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h4 color-highlight text-truncate">{{ .String "team.name" }}</span>
+                        <span class="size-h6 color-paragraph">{{ .String "gamesBack" }} GB</span>
+                      </div>
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h6 color-paragraph">{{ .Int "wins" }}-{{ .Int "losses" }}</span>
+                        <span class="size-h6 {{ if eq (slice (.String "streak.streakCode") 0 1) "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .String "streak.streakCode" }}</span>
+                      </div>
+                    </div>
+                  </li>
+                  {{ end }}
+                </ul>
+            - type: custom-api
+              title: NL West
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&divisionId=203&standingsTypes=regularSeason
+              cache: 15m
+              template: |
+                <ul class="list list-gap-10">
+                  {{ range .JSON.Array "records.2.teamRecords" }}
+                  <li class="flex items-center gap-15">
+                    <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                      <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
+                    </div>
+                    <div class="flex-grow min-w-0">
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h4 color-highlight text-truncate">{{ .String "team.name" }}</span>
+                        <span class="size-h6 color-paragraph">{{ .String "gamesBack" }} GB</span>
+                      </div>
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h6 color-paragraph">{{ .Int "wins" }}-{{ .Int "losses" }}</span>
+                        <span class="size-h6 {{ if eq (slice (.String "streak.streakCode") 0 1) "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .String "streak.streakCode" }}</span>
+                      </div>
+                    </div>
+                  </li>
+                  {{ end }}
+                </ul>
+            - type: custom-api
+              title: AL West
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&divisionId=200&standingsTypes=regularSeason
+              cache: 15m
+              template: |
+                <ul class="list list-gap-10">
+                  {{ range .JSON.Array "records.2.teamRecords" }}
+                  <li class="flex items-center gap-15">
+                    <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                      <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
+                    </div>
+                    <div class="flex-grow min-w-0">
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h4 color-highlight text-truncate">{{ .String "team.name" }}</span>
+                        <span class="size-h6 color-paragraph">{{ .String "gamesBack" }} GB</span>
+                      </div>
+                      <div class="flex justify-between items-baseline">
+                        <span class="size-h6 color-paragraph">{{ .Int "wins" }}-{{ .Int "losses" }}</span>
+                        <span class="size-h6 {{ if eq (slice (.String "streak.streakCode") 0 1) "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .String "streak.streakCode" }}</span>
+                      </div>
+                    </div>
+                  </li>
+                  {{ end }}
+                </ul>
+
+    - size: full
+      widgets:
+        - type: html
+          source: |
+            <div style="text-align: center; margin-bottom: 30px; margin-top: 10px;">
+              <pre style="display: inline-block; font-family: monospace; font-weight: bold; line-height: 1.1; color: var(--primary-color); font-size: clamp(8px, 1.4vw, 16px); white-space: pre; background: transparent; padding: 0; margin: 0; border: none; letter-spacing: -1px;">
+               ____    _    ____  ____    _    _____ ____      _    ____  
+              / ___|  / \  / ___|/ ___|  / \  |  ___|  _ \    / \  / ___| 
+              \___ \ / _ \ \___ \\___ \ / _ \ | |_  | |_) |  / _ \ \___ \ 
+               ___) / ___ \ ___) |___) / ___ \|  _| |  _ <  / ___ \ ___) |
+              |____/_/   \_\____/|____/_/   \_\_|   |_| \_\/_/   \_\____/ 
+              </pre>
+            </div>
+
+        - type: group
+          widgets:
+            - type: rss
+              title: Literary
+              limit: 15
+              feeds:
+                - url: https://lithub.com/feed/
+                  title: LitHub
+                - url: https://maudlinhouse.net/feed/
+                  title: Maudlin House
+                - url: https://www.bookforum.com/rss.xml
+                  title: Bookforum
+            - type: rss
+              title: Mainframe
+              limit: 20
+              feeds:
+                - url: https://news.ycombinator.com/rss
+                  title: HN
+            - type: rss
+              title: News
+              limit: 20
+              preserve-order: false
+              feeds:
+                - url: https://feedx.net/rss/ap.xml
+                  title: AP News
+                  limit: 10
+                - url: https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en
+                  title: Google News
+                  limit: 10
+
+        - type: rss
+          title: YouTube
+          style: horizontal-cards
+          limit: 12
+          feeds:
+            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCNUbP4RR0F25OmskaIcwMUw
+              title: A Boat in the Woods
+            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCqxkMCK3t6bTfsozawzU2VA
+              title: Dapper Notebooks
+            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCZguEMl05Ft8zZ60YeD-GJQ
+              title: Rainfall Projects
+            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCBEGcyJUC-0SFTJ1t45yOzw
+              title: Modest Mouse
+            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCklYWGTK7sMAN5SBklO-nTw
+              title: Design Milk
+            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCUJOnCMQtHJb4NfvWFWscKf
+              title: Typewriter Chicago
+
+        - type: group
+          widgets:
+            - type: reddit
+              subreddit: CHICubs
+              title: r/CHICubs
+              show-thumbnails: true
+            - type: reddit
+              subreddit: mlb
+              title: r/mlb
+              show-thumbnails: true
+            - type: reddit
+              subreddit: roanoke
+              title: r/roanoke
+              show-thumbnails: true
+            - type: reddit
+              subreddit: typewriters
+              title: r/typewriters
+              show-thumbnails: true
+            - type: reddit
+              subreddit: stationery
+              title: r/stationery
+              show-thumbnails: true
+            - type: reddit
+              subreddit: virginia
+              title: r/virginia
+              show-thumbnails: true
+            - type: reddit
+              subreddit: WritingHub
+              title: r/WritingHub
+              show-thumbnails: true
+            - type: reddit
+              subreddit: Wildcats
+              title: r/Wildcats
+              show-thumbnails: true
+            - type: reddit
+              subreddit: cyberDeck
+              title: r/cyberDeck
+              show-thumbnails: true
+            - type: reddit
+              subreddit: BookshelvesDetective
+              title: r/BookshelvesDetective
+              show-thumbnails: true
+
+    - size: small
+      widgets:
+        - type: weather
+          location: Radford, Virginia, United States
+          units: imperial # alternatively "metric"
+          hour-format: 12h # alternatively "24h"
+          # Optionally hide the location from being displayed in the widget
+          # hide-location: true
+
+        - type: search
+          search-engine: google
+          placeholder: Search Google...
+          new-tab: true
+
+        - type: html
+          title: Companion
+          source: |
+            <img src="https://i.imgur.com/7yQ2DqX.png" 
+                 style="width: 100%; height: auto; display: block; border-radius: 8px;" 
+                 alt="Companion">
+
+        - type: releases
+          cache: 1d
+          # Without authentication the Github API allows for up to 60 requests per hour. You can create a
+          # read-only token from your Github account settings and use it here to increase the limit.
+          # token: ...
+          repositories:
+            - glanceapp/glance
+            - go-gitea/gitea
+            - immich-app/immich
+            - syncthing/syncthing

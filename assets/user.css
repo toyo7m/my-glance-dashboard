@@ -1,0 +1,32 @@
+/* 
+   ULTRA-DARK CALENDAR STYLING 
+   Killing the "Beacon" effect for true dark mode 
+*/
+
+.widget[data-type="iframe"] {
+    background-color: #111 !important; /* Dark base to prevent bleed */
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+iframe {
+    border-radius: 12px !important;
+    border: none !important;
+    
+    /* 
+       PUSHING BRIGHTNESS DOWN 
+       0.4 - 0.5 range makes it extremely muted and dark.
+       Lowering saturation to prevent vibrant colors from popping.
+    */
+    filter: brightness(0.4) contrast(0.9) saturate(0.6) !important;
+    
+    opacity: 0.8 !important;
+    transition: all 0.4s ease-in-out !important;
+}
+
+iframe:hover {
+    /* Reveals the calendar clearly when you need to read it */
+    filter: brightness(0.9) contrast(1.0) saturate(1.0) !important;
+    opacity: 1.0 !important;
+}
