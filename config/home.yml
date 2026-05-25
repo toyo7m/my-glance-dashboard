@@ -225,46 +225,56 @@
 
         - type: group
           widgets:
-            - type: reddit
-              subreddit: CHICubs
+            - type: rss
               title: r/CHICubs
-              show-thumbnails: true
-            - type: reddit
-              subreddit: mlb
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/CHICubs/.rss
+            - type: rss
               title: r/mlb
-              show-thumbnails: true
-            - type: reddit
-              subreddit: roanoke
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/mlb/.rss
+            - type: rss
               title: r/roanoke
-              show-thumbnails: true
-            - type: reddit
-              subreddit: typewriters
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/roanoke/.rss
+            - type: rss
               title: r/typewriters
-              show-thumbnails: true
-            - type: reddit
-              subreddit: stationery
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/typewriters/.rss
+            - type: rss
               title: r/stationery
-              show-thumbnails: true
-            - type: reddit
-              subreddit: virginia
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/stationery/.rss
+            - type: rss
               title: r/virginia
-              show-thumbnails: true
-            - type: reddit
-              subreddit: WritingHub
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/virginia/.rss
+            - type: rss
               title: r/WritingHub
-              show-thumbnails: true
-            - type: reddit
-              subreddit: Wildcats
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/WritingHub/.rss
+            - type: rss
               title: r/Wildcats
-              show-thumbnails: true
-            - type: reddit
-              subreddit: cyberDeck
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/Wildcats/.rss
+            - type: rss
               title: r/cyberDeck
-              show-thumbnails: true
-            - type: reddit
-              subreddit: BookshelvesDetective
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/cyberDeck/.rss
+            - type: rss
               title: r/BookshelvesDetective
-              show-thumbnails: true
+              limit: 10
+              feeds:
+                - url: https://www.reddit.com/r/BookshelvesDetective/.rss
 
     - size: small
       widgets:
