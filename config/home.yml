@@ -222,7 +222,7 @@
           cache: 30m
           template: |
             <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin;">
-              {{ define "yt_item" }}
+              {{ range .JSON.Array "items" }}
                 {{ if eq (.String "snippet.type") "upload" }}
                 <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
                   <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
@@ -235,13 +235,21 @@
                 </a>
                 {{ end }}
               {{ end }}
-
-              {{ range .JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
-              {{ range (.Subrequest "ch2").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
-              {{ range (.Subrequest "ch3").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
-              {{ range (.Subrequest "ch4").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
-              {{ range (.Subrequest "ch5").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
-              {{ range (.Subrequest "ch6").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
+              {{ range $key, $sub := .Subrequests }}
+                {{ range $sub.JSON.Array "items" }}
+                  {{ if eq (.String "snippet.type") "upload" }}
+                  <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                      <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
+                      <div style="padding: 10px;">
+                        <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
+                        <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
+                      </div>
+                    </div>
+                  </a>
+                  {{ end }}
+                {{ end }}
+              {{ end }}
             </div>
 
         - type: group
