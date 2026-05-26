@@ -391,13 +391,7 @@
                  style="width: 100%; height: auto; display: block; border-radius: 8px;" 
                  alt="Companion">
 
-        - type: releases
-          cache: 1d
-          # Without authentication the Github API allows for up to 60 requests per hour. You can create a
-          # read-only token from your Github account settings and use it here to increase the limit.
-          # token: ...
-          repositories:
-            - glanceapp/glance
-            - go-gitea/gitea
-            - immich-app/immich
-            - syncthing/syncthing
+        - type: iframe
+          title: Tasks
+          source: https://tasks.google.com/embed/?origin=https://calendar.google.com
+          height: 400
