@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div id="yt-feed" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+        Loading videos...
+    </div>
+    <script>
+        async function fetchVideos(channelId) {
+            const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+            const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+            const data = await response.json();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+            const entries = xmlDoc.getElementsByTagName("entry");
+            let videos = [];
+            for (let i = 0; i < Math.min(entries.length, 3); i++) {
+                const videoId = entries[i].getElementsByTagName("yt:videoId")[0].textContent;
+                const title = entries[i].getElementsByTagName("title")[0].textContent;
+                const date = new Date(entries[i].getElementsByTagName("published")[0].textContent);
+                videos.push({
+                    id: videoId,
+                    title: title,
+                    date: date,
+                    thumb: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+                });
+            }
+            return videos;
+        }
+
+        async function init() {
+            const channels = ['UCNUbP4RR0F25OmskaIcwMUw', 'UCqxkMCK3t6bTfsozawzU2VA'];
+            let allVideos = [];
+            for (const id of channels) {
+                try {
+                    const vids = await fetchVideos(id);
+                    allVideos = allVideos.concat(vids);
+                } catch (e) {}
+            }
+            allVideos.sort((a, b) => b.date - a.date);
+            const container = document.getElementById('yt-feed');
+            container.innerHTML = allVideos.map(v => `
+                <div style="flex-shrink: 0; width: 180px; background: #222; border-radius: 8px; overflow: hidden;">
+                    <img src="${v.thumb}" style="width: 100%; display: block;">
+                    <div style="padding: 10px; font-size: 12px; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${v.title}</div>
+                </div>
+            `).join('');
+        }
+        init();
+    </script>
+</body>
+</html>
