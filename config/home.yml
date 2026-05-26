@@ -205,23 +205,15 @@
                   title: Google News
                   limit: 10
 
-        - type: rss
+        - type: videos
           title: YouTube
-          style: horizontal-cards
-          limit: 12
-          feeds:
-            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCNUbP4RR0F25OmskaIcwMUw
-              title: A Boat in the Woods
-            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCqxkMCK3t6bTfsozawzU2VA
-              title: Dapper Notebooks
-            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCZguEMl05Ft8zZ60YeD-GJQ
-              title: Rainfall Projects
-            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCBEGcyJUC-0SFTJ1t45yOzw
-              title: Modest Mouse
-            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCklYWGTK7sMAN5SBklO-nTw
-              title: Design Milk
-            - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCttffEucm1BxYqrQsdzs6pQ
-              title: Typewriter Chicago
+          channels:
+            - UCNUbP4RR0F25OmskaIcwMUw # A Boat in the Woods
+            - UCqxkMCK3t6bTfsozawzU2VA # Dapper Notebooks
+            - UCZguEMl05Ft8zZ60YeD-GJQ # Rainfall Projects
+            - UCBEGcyJUC-0SFTJ1t45yOzw # Modest Mouse
+            - UCklYWGTK7sMAN5SBklO-nTw # Design Milk
+            - UCttffEucm1BxYqrQsdzs6pQ # Typewriter Chicago
 
         - type: group
           widgets:
