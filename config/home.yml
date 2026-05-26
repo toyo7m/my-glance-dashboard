@@ -207,7 +207,7 @@
 
         - type: rss
           title: YouTube
-          style: horizontal-cards
+          style: detailed-list
           limit: 12
           feeds:
             - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCNUbP4RR0F25OmskaIcwMUw&format=Atom
