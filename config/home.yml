@@ -205,15 +205,23 @@
                   title: Google News
                   limit: 10
 
-        - type: videos
+        - type: rss
           title: YouTube
-          channels:
-            - UCNUbP4RR0F25OmskaIcwMUw # A Boat in the Woods
-            - UCqxkMCK3t6bTfsozawzU2VA # Dapper Notebooks
-            - UCZguEMl05Ft8zZ60YeD-GJQ # Rainfall Projects
-            - UCBEGcyJUC-0SFTJ1t45yOzw # Modest Mouse
-            - UCklYWGTK7sMAN5SBklO-nTw # Design Milk
-            - UCttffEucm1BxYqrQsdzs6pQ # Typewriter Chicago
+          style: horizontal-cards
+          limit: 12
+          feeds:
+            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCNUbP4RR0F25OmskaIcwMUw&format=Atom
+              title: A Boat in the Woods
+            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCqxkMCK3t6bTfsozawzU2VA&format=Atom
+              title: Dapper Notebooks
+            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCZguEMl05Ft8zZ60YeD-GJQ&format=Atom
+              title: Rainfall Projects
+            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCBEGcyJUC-0SFTJ1t45yOzw&format=Atom
+              title: Modest Mouse
+            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCklYWGTK7sMAN5SBklO-nTw&format=Atom
+              title: Design Milk
+            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCttffEucm1BxYqrQsdzs6pQ&format=Atom
+              title: Typewriter Chicago
 
         - type: group
           widgets:
