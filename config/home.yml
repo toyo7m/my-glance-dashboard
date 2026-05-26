@@ -207,20 +207,20 @@
 
         - type: rss
           title: YouTube
-          style: detailed-list
-          limit: 12
+          style: horizontal-cards
+          limit: 15
           feeds:
-            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCNUbP4RR0F25OmskaIcwMUw&format=Atom
+            - url: https://bridge.sysadmins.ws/?action=display&bridge=Youtube&context=By+channel+id&c=UCNUbP4RR0F25OmskaIcwMUw&format=Atom
               title: A Boat in the Woods
-            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCqxkMCK3t6bTfsozawzU2VA&format=Atom
+            - url: https://bridge.sysadmins.ws/?action=display&bridge=Youtube&context=By+channel+id&c=UCqxkMCK3t6bTfsozawzU2VA&format=Atom
               title: Dapper Notebooks
-            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCZguEMl05Ft8zZ60YeD-GJQ&format=Atom
+            - url: https://bridge.sysadmins.ws/?action=display&bridge=Youtube&context=By+channel+id&c=UCZguEMl05Ft8zZ60YeD-GJQ&format=Atom
               title: Rainfall Projects
-            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCBEGcyJUC-0SFTJ1t45yOzw&format=Atom
+            - url: https://bridge.sysadmins.ws/?action=display&bridge=Youtube&context=By+channel+id&c=UCBEGcyJUC-0SFTJ1t45yOzw&format=Atom
               title: Modest Mouse
-            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCklYWGTK7sMAN5SBklO-nTw&format=Atom
+            - url: https://bridge.sysadmins.ws/?action=display&bridge=Youtube&context=By+channel+id&c=UCklYWGTK7sMAN5SBklO-nTw&format=Atom
               title: Design Milk
-            - url: https://rss-bridge.org/bridge01/?action=display&bridge=Youtube&context=By+channel+id&c=UCttffEucm1BxYqrQsdzs6pQ&format=Atom
+            - url: https://bridge.sysadmins.ws/?action=display&bridge=Youtube&context=By+channel+id&c=UCttffEucm1BxYqrQsdzs6pQ&format=Atom
               title: Typewriter Chicago
 
         - type: group
