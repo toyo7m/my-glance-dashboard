@@ -1,32 +1,34 @@
 /* 
-   ULTRA-DARK CALENDAR STYLING 
-   Killing the "Beacon" effect for true dark mode 
+   ULTRA-DARK DASHBOARD STYLING 
+   Force-darkening all embeds (Calendar, Tasks, etc.)
 */
 
 .widget[data-type="iframe"] {
-    background-color: #111 !important; /* Dark base to prevent bleed */
+    background-color: #111 !important; 
     border-radius: 12px !important;
     overflow: hidden !important;
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
+/* Aggressively target all iframes for consistent dark mode */
 iframe {
     border-radius: 12px !important;
     border: none !important;
+    display: block !important;
+    width: 100% !important;
     
     /* 
        PUSHING BRIGHTNESS DOWN 
-       0.4 - 0.5 range makes it extremely muted and dark.
-       Lowering saturation to prevent vibrant colors from popping.
+       0.4 range makes white backgrounds become dark slate.
     */
     filter: brightness(0.4) contrast(0.9) saturate(0.6) !important;
     
-    opacity: 0.8 !important;
+    opacity: 0.85 !important;
     transition: all 0.4s ease-in-out !important;
 }
 
 iframe:hover {
-    /* Reveals the calendar clearly when you need to read it */
+    /* Reveals the content clearly when you need to interact */
     filter: brightness(0.9) contrast(1.0) saturate(1.0) !important;
     opacity: 1.0 !important;
 }
