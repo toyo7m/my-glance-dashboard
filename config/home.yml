@@ -209,28 +209,36 @@
           title: YouTube
           url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCNUbP4RR0F25OmskaIcwMUw&maxResults=4&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
           subrequests:
-            - url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCqxkMCK3t6bTfsozawzU2VA&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
-            - url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCZguEMl05Ft8zZ60YeD-GJQ&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
-            - url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCBEGcyJUC-0SFTJ1t45yOzw&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
-            - url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCklYWGTK7sMAN5SBklO-nTw&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
-            - url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCttffEucm1BxYqrQsdzs6pQ&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
+            ch2:
+              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCqxkMCK3t6bTfsozawzU2VA&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
+            ch3:
+              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCZguEMl05Ft8zZ60YeD-GJQ&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
+            ch4:
+              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCBEGcyJUC-0SFTJ1t45yOzw&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
+            ch5:
+              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCklYWGTK7sMAN5SBklO-nTw&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
+            ch6:
+              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCttffEucm1BxYqrQsdzs6pQ&maxResults=3&key=AIzaSyB42U_lEXDZGtnqgCbELZWxcF_Aalskink
           cache: 30m
           template: |
             <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin;">
-              {{ $all := .JSON.Array "items" }}
-              {{ range .Subrequests }}{{ $all = concat $all (.JSON.Array "items") }}{{ end }}
-              {{ range sort $all "snippet.publishedAt" "desc" }}
-              {{ if eq (.String "snippet.type") "upload" }}
-              <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                  <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                  <div style="padding: 10px;">
-                    <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
-                    <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
+              {{ define "yt_item" }}
+                {{ if eq (.String "snippet.type") "upload" }}
+                <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
+                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                    <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
+                    <div style="padding: 10px;">
+                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
+                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
+                    </div>
                   </div>
-                </div>
-              </a>
+                </a>
+                {{ end }}
               {{ end }}
+
+              {{ range .JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
+              {{ range .Subrequests }}
+                {{ range .JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
               {{ end }}
             </div>
 
