@@ -237,9 +237,11 @@
               {{ end }}
 
               {{ range .JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
-              {{ range .Subrequests }}
-                {{ range .JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
-              {{ end }}
+              {{ range (.Subrequest "ch2").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
+              {{ range (.Subrequest "ch3").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
+              {{ range (.Subrequest "ch4").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
+              {{ range (.Subrequest "ch5").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
+              {{ range (.Subrequest "ch6").JSON.Array "items" }}{{ template "yt_item" . }}{{ end }}
             </div>
 
         - type: group
