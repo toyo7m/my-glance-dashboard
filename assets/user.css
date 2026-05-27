@@ -10,6 +10,7 @@
    stack everything vertically so the whole dashboard is reachable on a phone. */
 @media (max-width: 820px) {
   .page-columns { flex-direction: column !important; }
+  .page-column-full { order: -1 !important; } /* center column loads first on mobile */
   .page-column-small {
     display: block !important;
     width: auto !important;
