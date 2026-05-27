@@ -481,6 +481,35 @@
                  style="width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 14px; opacity: 0.9;"
                  alt="Companion">
 
+        - type: custom-api
+          title: Fantasy
+          cache: 10m
+          url: ${WORKER_URL}/fantasy
+          headers:
+            X-Dashboard-Key: ${DASHBOARD_KEY}
+          template: |
+            {{ if .JSON.String "me.abbrev" }}
+            <div style="text-align:center;">
+              <div class="size-h6 color-paragraph" style="margin-bottom:8px;">Week {{ .JSON.Int "week" }} &middot; {{ .JSON.String "league" }}</div>
+              <div style="display:flex; align-items:flex-start; justify-content:space-around; gap:6px;">
+                <div style="flex:1; min-width:0;">
+                  {{ if .JSON.String "me.logo" }}<img src="{{ .JSON.String "me.logo" }}" style="width:30px; height:30px; border-radius:50%; object-fit:cover; background:rgba(255,255,255,0.05);">{{ end }}
+                  <div class="size-h6 color-highlight text-truncate">{{ .JSON.String "me.abbrev" }}</div>
+                  <div class="size-h2 color-highlight">{{ .JSON.String "me.score" }}</div>
+                </div>
+                <span class="size-h6 color-paragraph" style="padding-top:10px;">vs</span>
+                <div style="flex:1; min-width:0;">
+                  {{ if .JSON.String "opp.logo" }}<img src="{{ .JSON.String "opp.logo" }}" style="width:30px; height:30px; border-radius:50%; object-fit:cover; background:rgba(255,255,255,0.05);">{{ end }}
+                  <div class="size-h6 color-highlight text-truncate">{{ .JSON.String "opp.abbrev" }}</div>
+                  <div class="size-h2 color-highlight">{{ .JSON.String "opp.score" }}</div>
+                </div>
+              </div>
+              <a href="{{ .JSON.String "teamUrl" }}" target="_blank" style="display:block; margin-top:12px; padding:7px 0; border-radius:8px; background:rgba(244,196,48,0.12); border:1px solid rgba(244,196,48,0.45); color:#F4C430; text-decoration:none;">&#9918; Set Lineup</a>
+            </div>
+            {{ else }}
+            <p class="color-paragraph" style="opacity:.6; text-align:center;">No active matchup.</p>
+            {{ end }}
+
         - type: html
           title: Tasks
           source: |
