@@ -236,16 +236,10 @@
             ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝</pre>
             </div>
 
-        - type: custom-api
-          css-class: no-header
-          cache: 1h
-          url: ${WORKER_URL}/marginalia
-          headers:
-            X-Dashboard-Key: ${DASHBOARD_KEY}
-          template: |
-            <div style="text-align:center; padding:4px 14px;">
-              <div class="size-h4 color-highlight" style="font-style:italic; line-height:1.55;">&#8220;{{ .JSON.String "quote" }}&#8221;</div>
-              <div class="size-h6 color-paragraph" style="margin-top:8px;">&mdash; {{ .JSON.String "author" }}{{ if .JSON.String "work" }}, <span style="font-style:italic;">{{ .JSON.String "work" }}</span>{{ end }}</div>
+        - type: html
+          source: |
+            <div id="mg-app" data-worker="${WORKER_URL}" data-key="${DASHBOARD_KEY}">
+              <div class="color-paragraph" style="text-align:center; opacity:.4; padding:8px;">&hellip;</div>
             </div>
 
         - type: bookmarks
