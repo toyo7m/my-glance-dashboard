@@ -6,6 +6,17 @@
 /* hide the default widget header (e.g. "CUSTOM API") for headerless widgets */
 .no-header .widget-header { display: none; }
 
+/* Mobile: Glance hides the small/sidebar columns below ~1200px. Bring them back and
+   stack everything vertically so the whole dashboard is reachable on a phone. */
+@media (max-width: 820px) {
+  .page-columns { flex-direction: column !important; }
+  .page-column-small {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
+
 
 /* ---- Interactive Todoist widget ---- */
 #td-add { margin-bottom: 12px; }
