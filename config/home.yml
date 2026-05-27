@@ -483,8 +483,8 @@
         - type: html
           title: Companion
           source: |
-            <img src="https://i.imgur.com/7yQ2DqX.png" 
-                 style="width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 14px;"
+            <img src="/assets/whale.gif"
+                 style="width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 14px; opacity: 0.9;"
                  alt="Companion">
 
         - type: html
