@@ -208,13 +208,13 @@
             <ul class="list list-gap-10">
               {{ range $events }}
               <li class="flex items-center gap-15">
-                <div style="min-width: 44px; text-align: center; line-height: 1.15;">
-                  <div class="size-h6 color-paragraph" style="text-transform: uppercase; letter-spacing: .5px;">{{ .String "weekday" }}</div>
+                <div style="flex-shrink:0; min-width:42px; text-align:center; line-height:1.15;">
+                  <div class="size-h6 color-paragraph" style="text-transform:uppercase; letter-spacing:.5px;">{{ .String "weekday" }}</div>
                   <div class="size-h3 color-highlight">{{ .String "day" }}</div>
-                  <div class="size-h6 color-paragraph" style="text-transform: uppercase;">{{ .String "month" }}</div>
+                  <div class="size-h6 color-paragraph" style="text-transform:uppercase;">{{ .String "month" }}</div>
                 </div>
-                <div class="flex-grow min-w-0">
-                  <div class="size-h4 color-highlight text-truncate">{{ .String "title" }}</div>
+                <div class="flex-grow" style="min-width:0; overflow:hidden;">
+                  <div class="size-h4 color-highlight" style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; overflow-wrap:anywhere;">{{ .String "title" }}</div>
                   <div class="size-h6 color-paragraph text-truncate">{{ .String "time" }}{{ if .String "location" }} · {{ .String "location" }}{{ end }}</div>
                 </div>
               </li>
