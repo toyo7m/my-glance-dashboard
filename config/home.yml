@@ -7,6 +7,46 @@
         - type: clock
           hour-format: 12h
 
+        - type: custom-api
+          title: Cubs
+          cache: 2m
+          url: ${WORKER_URL}/cubs
+          headers:
+            X-Dashboard-Key: ${DASHBOARD_KEY}
+          template: |
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+              <span class="size-h3 color-highlight">Cubs</span>
+              <span class="size-h6 color-paragraph">{{ .JSON.String "rank" }} · {{ .JSON.String "division" }}</span>
+            </div>
+            {{ if eq (.JSON.String "state") "live" }}
+              <div class="size-h6 color-positive" style="margin-bottom:4px;">● LIVE · {{ .JSON.String "live.inning" }}{{ if .JSON.String "live.outs" }} · {{ .JSON.String "live.outs" }}{{ end }}</div>
+              <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin:6px 0;">
+                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "live.cubsId" }}.svg" style="width:26px;height:26px;">
+                <span class="size-h2 color-highlight">{{ .JSON.Int "live.cubs" }}</span>
+                <span class="size-h5 color-paragraph">–</span>
+                <span class="size-h2 color-highlight">{{ .JSON.Int "live.opp" }}</span>
+                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "live.oppId" }}.svg" style="width:26px;height:26px;">
+              </div>
+            {{ else if eq (.JSON.String "state") "next" }}
+              <div class="size-h6 color-paragraph">NEXT · {{ .JSON.String "next.date" }} · {{ .JSON.String "next.time" }}</div>
+              <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin:8px 0;">
+                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "next.cubsId" }}.svg" style="width:26px;height:26px;">
+                <span class="size-h4 color-highlight">CHC</span>
+                <span class="size-h5 color-paragraph">{{ .JSON.String "next.vs" }}</span>
+                <span class="size-h4 color-highlight">{{ .JSON.String "next.oppAbbrev" }}</span>
+                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "next.oppId" }}.svg" style="width:26px;height:26px;">
+              </div>
+              <div class="size-h6 color-paragraph" style="text-align:center;">{{ .JSON.String "next.cubsSP" }} · {{ .JSON.String "next.oppSP" }}</div>
+              {{ if .JSON.String "next.venue" }}<div class="size-h6 color-paragraph" style="text-align:center; opacity:.6;">{{ .JSON.String "next.venue" }}</div>{{ end }}
+            {{ end }}
+            {{ if .JSON.String "last.decision" }}
+              <div style="border-top:1px solid rgba(255,255,255,0.08); margin-top:10px; padding-top:8px;">
+                <span class="size-h6 color-paragraph">LAST</span>
+                <span class="size-h5 {{ if eq (.JSON.String "last.decision") "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .JSON.String "last.decision" }} {{ .JSON.String "last.score" }}</span>
+                <span class="size-h6 color-paragraph">{{ .JSON.String "last.vs" }} {{ .JSON.String "last.oppAbbrev" }} · {{ .JSON.String "last.day" }}</span>
+              </div>
+            {{ end }}
+
         - type: group
           widgets:
             - type: custom-api
