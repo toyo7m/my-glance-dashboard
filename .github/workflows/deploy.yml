@@ -1,9 +1,12 @@
 name: Deploy to Hugging Face Space
 
-# Mirrors every push to main onto the Hugging Face Space, which then
-# triggers an automatic Docker rebuild (~60s to go live).
-# Requires a repo secret HF_TOKEN: a write-scoped Hugging Face access token
-# (https://huggingface.co/settings/tokens).
+# Mirrors this repo to the Hugging Face Space on every push to main.
+# HF then auto-rebuilds the Docker container (~60s to go live).
+#
+# Requires one repo secret:
+#   HF_TOKEN  — a *Write*-scoped Hugging Face token
+#               (https://huggingface.co/settings/tokens → New token → Write)
+# Set it under: repo Settings → Secrets and variables → Actions.
 
 on:
   push:
@@ -16,14 +19,55 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          lfs: true
 
-      - name: Push to Hugging Face Space
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install huggingface_hub
+        run: pip install --quiet --upgrade huggingface_hub
+
+      - name: Check HF_TOKEN is present
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git push --force \
-            "https://toyo7m:${HF_TOKEN}@huggingface.co/spaces/toyo7m/my-glance-dashboard" \
-            HEAD:main
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::HF_TOKEN secret is missing/empty. Add a *Write*-scoped Hugging Face token as a repo Actions secret named HF_TOKEN."
+            exit 1
+          fi
+
+      - name: Upload to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import os, sys
+          from huggingface_hub import HfApi
+
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          try:
+              who = api.whoami()
+          except Exception as e:
+              print(f"::error::HF_TOKEN is invalid: {e}")
+              sys.exit(1)
+          print(f"Authenticated with Hugging Face as: {who.get('name')}")
+
+          try:
+              api.upload_folder(
+                  repo_id="toyo7m/my-glance-dashboard",
+                  repo_type="space",
+                  folder_path=".",
+                  commit_message=f"Sync from GitHub @ {os.environ.get('GIT_SHA','')[:7]}",
+                  ignore_patterns=[
+                      ".git/*", ".github/*",
+                      ".env", ".env.*", "*.local.yml",
+                      "docker-compose.yml", "yt_test.html", ".DS_Store",
+                  ],
+              )
+          except Exception as e:
+              print(f"::error::Upload failed — the token likely lacks *Write* access to the Space: {e}")
+              sys.exit(1)
+          print("✅ Synced to Hugging Face Space — it will rebuild shortly.")
+          PY
