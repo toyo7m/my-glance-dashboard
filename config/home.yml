@@ -180,23 +180,25 @@
 
         - type: bookmarks
           groups:
-            - title: Daily
+            - title: RU
               links:
-                - title: Gmail
-                  url: https://mail.google.com
-                  icon: si:gmail
-                - title: Calendar
-                  url: https://calendar.google.com
-                  icon: si:googlecalendar
-                - title: Drive
-                  url: https://drive.google.com
-                  icon: si:googledrive
-                - title: Notion
-                  url: https://www.notion.so
-                  icon: si:notion
-                - title: Todoist
-                  url: https://todoist.com/app
-                  icon: si:todoist
+                - title: OneCampus
+                  url: https://onecampus.radford.edu/
+                  icon: mdi:school
+                - title: D2L
+                  url: https://learn.radford.edu/d2l/home
+                  icon: mdi:book-open-variant
+                - title: RU Library
+                  url: https://www.radford.edu/libraries/index.html
+                  icon: mdi:library
+            - title: H
+              links:
+                - title: H-LMS
+                  url: https://learn.theholler.org/wp-admin
+                  icon: si:wordpress
+                - title: H
+                  url: https://www.theholler.org/wp-admin
+                  icon: si:wordpress
             - title: Build
               links:
                 - title: GitHub
