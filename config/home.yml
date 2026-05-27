@@ -7,37 +7,6 @@
         - type: clock
           hour-format: 12h
 
-        - type: calendar
-          first-day-of-week: monday
-
-        - type: custom-api
-          title: Upcoming
-          cache: 10m
-          url: ${WORKER_URL}/calendar?limit=12&days=45
-          headers:
-            X-Dashboard-Key: ${DASHBOARD_KEY}
-          template: |
-            {{ $events := .JSON.Array "events" }}
-            {{ if eq (len $events) 0 }}
-              <p class="color-paragraph" style="opacity:.6">Nothing on the calendar.</p>
-            {{ else }}
-            <ul class="list list-gap-10">
-              {{ range $events }}
-              <li class="flex items-center gap-15">
-                <div style="min-width: 44px; text-align: center; line-height: 1.15;">
-                  <div class="size-h6 color-paragraph" style="text-transform: uppercase; letter-spacing: .5px;">{{ .String "weekday" }}</div>
-                  <div class="size-h3 color-highlight">{{ .String "day" }}</div>
-                  <div class="size-h6 color-paragraph" style="text-transform: uppercase;">{{ .String "month" }}</div>
-                </div>
-                <div class="flex-grow min-w-0">
-                  <div class="size-h4 color-highlight text-truncate">{{ .String "title" }}</div>
-                  <div class="size-h6 color-paragraph text-truncate">{{ .String "time" }}{{ if .String "location" }} · {{ .String "location" }}{{ end }}</div>
-                </div>
-              </li>
-              {{ end }}
-            </ul>
-            {{ end }}
-
         - type: group
           widgets:
             - type: custom-api
@@ -185,12 +154,40 @@
                   {{ end }}
                 </ul>
 
+        - type: custom-api
+          title: Upcoming
+          cache: 10m
+          url: ${WORKER_URL}/calendar?limit=12&days=45
+          headers:
+            X-Dashboard-Key: ${DASHBOARD_KEY}
+          template: |
+            {{ $events := .JSON.Array "events" }}
+            {{ if eq (len $events) 0 }}
+              <p class="color-paragraph" style="opacity:.6">Nothing on the calendar.</p>
+            {{ else }}
+            <ul class="list list-gap-10">
+              {{ range $events }}
+              <li class="flex items-center gap-15">
+                <div style="min-width: 44px; text-align: center; line-height: 1.15;">
+                  <div class="size-h6 color-paragraph" style="text-transform: uppercase; letter-spacing: .5px;">{{ .String "weekday" }}</div>
+                  <div class="size-h3 color-highlight">{{ .String "day" }}</div>
+                  <div class="size-h6 color-paragraph" style="text-transform: uppercase;">{{ .String "month" }}</div>
+                </div>
+                <div class="flex-grow min-w-0">
+                  <div class="size-h4 color-highlight text-truncate">{{ .String "title" }}</div>
+                  <div class="size-h6 color-paragraph text-truncate">{{ .String "time" }}{{ if .String "location" }} · {{ .String "location" }}{{ end }}</div>
+                </div>
+              </li>
+              {{ end }}
+            </ul>
+            {{ end }}
+
     - size: full
       widgets:
         - type: html
           source: |
             <div style="text-align: center; margin: 12px 0 28px;">
-              <pre style="display: inline-block; font-family: monospace; font-weight: bold; line-height: 1; color: #fee4cd; font-size: clamp(5px, 1.05vw, 13px); white-space: pre; background: transparent; margin: 0; padding: 0; border: none; letter-spacing: 0;">
+              <pre style="display: inline-block; font-family: monospace; font-weight: bold; line-height: 1; color: #F4C430; font-size: clamp(5px, 1.05vw, 13px); white-space: pre; background: transparent; margin: 0; padding: 0; border: none; letter-spacing: 0;">
             ███████╗ █████╗ ███████╗███████╗ █████╗ ███████╗██████╗  █████╗ ███████╗
             ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝
             ███████╗███████║███████╗███████╗███████║█████╗  ██████╔╝███████║███████╗
@@ -426,6 +423,7 @@
           # hide-location: true
 
         - type: search
+          css-class: r-gap
           search-engine: google
           placeholder: Search Google...
           new-tab: true
@@ -434,13 +432,13 @@
           title: Companion
           source: |
             <img src="https://i.imgur.com/7yQ2DqX.png" 
-                 style="width: 100%; height: auto; display: block; border-radius: 8px;" 
+                 style="width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 14px;"
                  alt="Companion">
 
         - type: html
           title: Tasks
           source: |
-            <div id="td-app" data-worker="${WORKER_URL}" data-key="${DASHBOARD_KEY}">
+            <div id="td-app" data-worker="${WORKER_URL}" data-key="${DASHBOARD_KEY}" style="margin-top: 14px;">
               <form id="td-add" autocomplete="off">
                 <input id="td-input" type="text" placeholder="+ Add a task…" maxlength="500" />
               </form>

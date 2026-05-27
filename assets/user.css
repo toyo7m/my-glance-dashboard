@@ -1,5 +1,9 @@
 /* SASSAFRAS dashboard — custom styles */
 
+/* extra breathing room above tagged right-column widgets */
+.r-gap { margin-top: 14px; }
+
+
 /* ---- Interactive Todoist widget ---- */
 #td-add { margin-bottom: 12px; }
 #td-input {
