@@ -1,34 +1,37 @@
-/* 
-   ULTRA-DARK DASHBOARD STYLING 
-   Force-darkening all embeds (Calendar, Tasks, etc.)
-*/
+/* SASSAFRAS dashboard — custom styles */
 
-.widget[data-type="iframe"] {
-    background-color: #111 !important; 
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+/* ---- Interactive Todoist widget ---- */
+#td-add { margin-bottom: 12px; }
+#td-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--color-text-highlight, #e6e6e6);
+  font: inherit;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
+#td-input::placeholder { color: var(--color-text-subdue, #888); }
+#td-input:focus { border-color: var(--color-primary, #5a93d4); }
 
-/* Aggressively target all iframes for consistent dark mode */
-iframe {
-    border-radius: 12px !important;
-    border: none !important;
-    display: block !important;
-    width: 100% !important;
-    
-    /* 
-       PUSHING BRIGHTNESS DOWN 
-       0.4 range makes white backgrounds become dark slate.
-    */
-    filter: brightness(0.4) contrast(0.9) saturate(0.6) !important;
-    
-    opacity: 0.85 !important;
-    transition: all 0.4s ease-in-out !important;
+.td-item { transition: opacity 0.25s ease, transform 0.25s ease; }
+.td-check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 2px solid var(--color-text-subdue, #888);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
-
-iframe:hover {
-    /* Reveals the content clearly when you need to interact */
-    filter: brightness(0.9) contrast(1.0) saturate(1.0) !important;
-    opacity: 1.0 !important;
+.td-check:hover {
+  border-color: var(--color-positive, #4caf50);
+  box-shadow: inset 0 0 0 5px var(--color-positive, #4caf50);
 }
+.td-done { opacity: 0.35; transform: translateX(8px); }
+.td-done .td-content { text-decoration: line-through; }
