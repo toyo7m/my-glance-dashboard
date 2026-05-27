@@ -1,0 +1,29 @@
+name: Deploy to Hugging Face Space
+
+# Mirrors every push to main onto the Hugging Face Space, which then
+# triggers an automatic Docker rebuild (~60s to go live).
+# Requires a repo secret HF_TOKEN: a write-scoped Hugging Face access token
+# (https://huggingface.co/settings/tokens).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push --force \
+            "https://toyo7m:${HF_TOKEN}@huggingface.co/spaces/toyo7m/my-glance-dashboard" \
+            HEAD:main

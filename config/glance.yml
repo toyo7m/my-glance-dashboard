@@ -1,6 +1,18 @@
 server:
   port: 7860
   assets-path: /app/assets
+  # Trust Hugging Face's reverse proxy so real client IPs are seen (auth rate-limiting)
+  proxied: true
+
+# Password-gate the whole dashboard. Values come from HF Space secrets — never committed.
+# A session cookie keeps your devices logged in. Generate the values with:
+#   glance secret:make            -> set as HF secret AUTH_SECRET_KEY
+#   glance password:hash 'pw'     -> set as HF secret AUTH_PASSWORD_HASH
+auth:
+  secret-key: ${AUTH_SECRET_KEY}
+  users:
+    bruce:
+      password-hash: ${AUTH_PASSWORD_HASH}
 
 theme:
   # Note: assets are cached by the browser, changes to the CSS file

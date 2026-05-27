@@ -5,6 +5,9 @@ FROM glanceapp/glance:latest
 COPY config /app/config
 COPY assets /app/assets
 
+# Show Eastern time (clock widget / timestamps) instead of the container's UTC
+ENV TZ=America/New_York
+
 # Hugging Face Spaces requires port 7860
 EXPOSE 7860
 

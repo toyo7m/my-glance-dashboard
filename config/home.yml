@@ -4,6 +4,9 @@
   columns:
     - size: small
       widgets:
+        - type: clock
+          hour-format: 12h
+
         - type: calendar
           first-day-of-week: monday
 
@@ -165,15 +168,49 @@
       widgets:
         - type: html
           source: |
-            <div style="text-align: center; margin-bottom: 30px; margin-top: 10px;">
-              <pre style="display: inline-block; font-family: monospace; font-weight: bold; line-height: 1.1; color: var(--primary-color); font-size: clamp(8px, 1.4vw, 16px); white-space: pre; background: transparent; padding: 0; margin: 0; border: none; letter-spacing: -1px;">
-               ____    _    ____  ____    _    _____ ____      _    ____  
-              / ___|  / \  / ___|/ ___|  / \  |  ___|  _ \    / \  / ___| 
-              \___ \ / _ \ \___ \\___ \ / _ \ | |_  | |_) |  / _ \ \___ \ 
-               ___) / ___ \ ___) |___) / ___ \|  _| |  _ <  / ___ \ ___) |
-              |____/_/   \_\____/|____/_/   \_\_|   |_| \_\/_/   \_\____/ 
-              </pre>
+            <div style="text-align: center; margin: 12px 0 28px;">
+              <pre style="display: inline-block; font-family: monospace; font-weight: bold; line-height: 1; color: var(--primary-color); font-size: clamp(5px, 1.05vw, 13px); white-space: pre; background: transparent; margin: 0; padding: 0; border: none; letter-spacing: 0;">
+            ███████╗ █████╗ ███████╗███████╗ █████╗ ███████╗██████╗  █████╗ ███████╗
+            ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝
+            ███████╗███████║███████╗███████╗███████║█████╗  ██████╔╝███████║███████╗
+            ╚════██║██╔══██║╚════██║╚════██║██╔══██║██╔══╝  ██╔══██╗██╔══██║╚════██║
+            ███████║██║  ██║███████║███████║██║  ██║██║     ██║  ██║██║  ██║███████║
+            ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝</pre>
             </div>
+
+        - type: bookmarks
+          groups:
+            - title: Daily
+              links:
+                - title: Gmail
+                  url: https://mail.google.com
+                  icon: si:gmail
+                - title: Calendar
+                  url: https://calendar.google.com
+                  icon: si:googlecalendar
+                - title: Drive
+                  url: https://drive.google.com
+                  icon: si:googledrive
+                - title: Notion
+                  url: https://www.notion.so
+                  icon: si:notion
+                - title: Todoist
+                  url: https://todoist.com/app
+                  icon: si:todoist
+            - title: Build
+              links:
+                - title: GitHub
+                  url: https://github.com/toyo7m/my-glance-dashboard
+                  icon: si:github
+                - title: HF Space
+                  url: https://huggingface.co/spaces/toyo7m/my-glance-dashboard
+                  icon: si:huggingface
+                - title: Claude
+                  url: https://claude.ai
+                  icon: si:anthropic
+                - title: YouTube
+                  url: https://www.youtube.com
+                  icon: si:youtube
 
         - type: group
           widgets:
