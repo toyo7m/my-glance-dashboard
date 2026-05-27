@@ -190,7 +190,7 @@
         - type: html
           source: |
             <div style="text-align: center; margin: 12px 0 28px;">
-              <pre style="display: inline-block; font-family: monospace; font-weight: bold; line-height: 1; color: var(--primary-color); font-size: clamp(5px, 1.05vw, 13px); white-space: pre; background: transparent; margin: 0; padding: 0; border: none; letter-spacing: 0;">
+              <pre style="display: inline-block; font-family: monospace; font-weight: bold; line-height: 1; color: #fee4cd; font-size: clamp(5px, 1.05vw, 13px); white-space: pre; background: transparent; margin: 0; padding: 0; border: none; letter-spacing: 0;">
             ███████╗ █████╗ ███████╗███████╗ █████╗ ███████╗██████╗  █████╗ ███████╗
             ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝
             ███████╗███████║███████╗███████╗███████║█████╗  ██████╔╝███████║███████╗
@@ -220,20 +220,6 @@
                 - title: H
                   url: https://www.theholler.org/wp-admin
                   icon: si:wordpress
-            - title: Build
-              links:
-                - title: GitHub
-                  url: https://github.com/toyo7m/my-glance-dashboard
-                  icon: si:github
-                - title: HF Space
-                  url: https://huggingface.co/spaces/toyo7m/my-glance-dashboard
-                  icon: si:huggingface
-                - title: Claude
-                  url: https://claude.ai
-                  icon: si:anthropic
-                - title: YouTube
-                  url: https://www.youtube.com
-                  icon: si:youtube
 
         - type: group
           widgets:
