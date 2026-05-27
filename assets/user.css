@@ -3,6 +3,9 @@
 /* extra breathing room above tagged right-column widgets */
 .r-gap { margin-top: 14px; }
 
+/* hide the default widget header (e.g. "CUSTOM API") for headerless widgets */
+.no-header .widget-header { display: none; }
+
 
 /* ---- Interactive Todoist widget ---- */
 #td-add { margin-bottom: 12px; }
