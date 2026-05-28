@@ -48,6 +48,7 @@
             {{ end }}
 
         - type: group
+          css-class: mo-mlb
           widgets:
             - type: custom-api
               title: NL Central
@@ -195,6 +196,7 @@
                 </ul>
 
         - type: custom-api
+          css-class: mo-upcoming
           title: Upcoming
           cache: 10m
           url: ${WORKER_URL}/calendar?limit=12&days=45
@@ -265,6 +267,7 @@
                   icon: si:wordpress
 
         - type: group
+          css-class: mo-feeds
           widgets:
             - type: rss
               title: Literary
@@ -295,6 +298,7 @@
                   limit: 10
 
         - type: custom-api
+          css-class: mo-youtube
           title: YouTube
           url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCNUbP4RR0F25OmskaIcwMUw&maxResults=4&key=${YOUTUBE_API_KEY}
           subrequests:
@@ -397,6 +401,7 @@
             </div>
 
         - type: group
+          css-class: mo-reddit
           widgets:
             - type: rss
               title: r/CHICubs
@@ -482,6 +487,7 @@
                  alt="Companion">
 
         - type: custom-api
+          css-class: mo-fantasy
           title: Fantasy
           cache: 10m
           url: ${WORKER_URL}/fantasy
