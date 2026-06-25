@@ -404,66 +404,46 @@
         - type: group
           css-class: mo-reddit
           widgets:
-            - type: rss
-              title: r/CHICubs
+            - type: reddit
+              subreddit: CHICubs
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/CHICubs/.rss
-            - type: rss
-              title: r/mlb
+            - type: reddit
+              subreddit: mlb
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/mlb/.rss
-            - type: rss
-              title: r/roanoke
+            - type: reddit
+              subreddit: roanoke
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/roanoke/.rss
-            - type: rss
-              title: r/typewriters
+            - type: reddit
+              subreddit: typewriters
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/typewriters/.rss
-            - type: rss
-              title: r/stationery
+            - type: reddit
+              subreddit: stationery
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/stationery/.rss
-            - type: rss
-              title: r/virginia
+            - type: reddit
+              subreddit: virginia
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/virginia/.rss
-            - type: rss
-              title: r/WritingHub
+            - type: reddit
+              subreddit: WritingHub
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/WritingHub/.rss
-            - type: rss
-              title: r/Wildcats
+            - type: reddit
+              subreddit: Wildcats
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/Wildcats/.rss
-            - type: rss
-              title: r/cyberDeck
+            - type: reddit
+              subreddit: cyberDeck
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/cyberDeck/.rss
-            - type: rss
-              title: r/BookshelvesDetective
+            - type: reddit
+              subreddit: BookshelvesDetective
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://www.reddit.com/r/BookshelvesDetective/.rss
 
     - size: small
       widgets:
