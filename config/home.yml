@@ -409,61 +409,61 @@
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/CHICubs/.rss
+                - url: ${WORKER_URL}/reddit?sub=CHICubs
             - type: rss
               title: r/mlb
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/mlb/.rss
+                - url: ${WORKER_URL}/reddit?sub=mlb
             - type: rss
               title: r/roanoke
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/roanoke/.rss
+                - url: ${WORKER_URL}/reddit?sub=roanoke
             - type: rss
               title: r/typewriters
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/typewriters/.rss
+                - url: ${WORKER_URL}/reddit?sub=typewriters
             - type: rss
               title: r/stationery
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/stationery/.rss
+                - url: ${WORKER_URL}/reddit?sub=stationery
             - type: rss
               title: r/virginia
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/virginia/.rss
+                - url: ${WORKER_URL}/reddit?sub=virginia
             - type: rss
               title: r/WritingHub
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/WritingHub/.rss
+                - url: ${WORKER_URL}/reddit?sub=WritingHub
             - type: rss
               title: r/Wildcats
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/Wildcats/.rss
+                - url: ${WORKER_URL}/reddit?sub=Wildcats
             - type: rss
               title: r/cyberDeck
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/cyberDeck/.rss
+                - url: ${WORKER_URL}/reddit?sub=cyberDeck
             - type: rss
               title: r/BookshelvesDetective
               style: horizontal-cards
               limit: 10
               feeds:
-                - url: https://www.reddit.com/r/BookshelvesDetective/.rss
+                - url: ${WORKER_URL}/reddit?sub=BookshelvesDetective
 
     - size: small
       widgets:
