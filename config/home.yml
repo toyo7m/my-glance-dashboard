@@ -404,46 +404,66 @@
         - type: group
           css-class: mo-reddit
           widgets:
-            - type: reddit
-              subreddit: CHICubs
+            - type: rss
+              title: r/CHICubs
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: mlb
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=CHICubs
+            - type: rss
+              title: r/mlb
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: roanoke
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=mlb
+            - type: rss
+              title: r/roanoke
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: typewriters
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=roanoke
+            - type: rss
+              title: r/typewriters
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: stationery
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=typewriters
+            - type: rss
+              title: r/stationery
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: virginia
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=stationery
+            - type: rss
+              title: r/virginia
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: WritingHub
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=virginia
+            - type: rss
+              title: r/WritingHub
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: Wildcats
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=WritingHub
+            - type: rss
+              title: r/Wildcats
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: cyberDeck
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=Wildcats
+            - type: rss
+              title: r/cyberDeck
               style: horizontal-cards
               limit: 10
-            - type: reddit
-              subreddit: BookshelvesDetective
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=cyberDeck
+            - type: rss
+              title: r/BookshelvesDetective
               style: horizontal-cards
               limit: 10
+              feeds:
+                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=BookshelvesDetective
 
     - size: small
       widgets:
