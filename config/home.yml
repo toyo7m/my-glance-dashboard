@@ -299,18 +299,28 @@
                   title: Google News
                   limit: 10
 
-        - type: videos
+        # YouTube via Worker /youtube (keyless): HF datacenter IP can't fetch
+        # youtube.com RSS directly, so the Worker fetches all channels, merges +
+        # sorts by newest, returns JSON. Channels are passed in the URL.
+        - type: custom-api
           css-class: mo-youtube
           title: YouTube
           cache: 1h
-          limit: 20
-          channels:
-            - UCNUbP4RR0F25OmskaIcwMUw  # A Boat in the Woods
-            - UCqxkMCK3t6bTfsozawzU2VA  # Dapper Notebooks & Stationery
-            - UCZguEMl05Ft8zZ60YeD-GJQ  # Rainfall Projects
-            - UCBEGcyJUC-0SFTJ1t45yOzw  # Modest Mouse
-            - UCklYWGTK7sMAN5SBklO-nTw  # Design Milk
-            - UCttffEucm1BxYqrQsdzs6pQ  # Typewriter Chicago
+          url: ${WORKER_URL}/youtube?channels=UCNUbP4RR0F25OmskaIcwMUw,UCqxkMCK3t6bTfsozawzU2VA,UCZguEMl05Ft8zZ60YeD-GJQ,UCBEGcyJUC-0SFTJ1t45yOzw,UCklYWGTK7sMAN5SBklO-nTw,UCttffEucm1BxYqrQsdzs6pQ&limit=20
+          template: |
+            <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin;">
+              {{ range .JSON.Array "items" }}
+                <a href="https://www.youtube.com/watch?v={{ .String "videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
+                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                    <img src="{{ .String "thumbnail" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
+                    <div style="padding: 10px;">
+                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "title" }}</div>
+                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "channel" }}</div>
+                    </div>
+                  </div>
+                </a>
+              {{ end }}
+            </div>
 
         - type: group
           css-class: mo-reddit
