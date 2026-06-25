@@ -299,108 +299,18 @@
                   title: Google News
                   limit: 10
 
-        - type: custom-api
+        - type: videos
           css-class: mo-youtube
           title: YouTube
-          url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCNUbP4RR0F25OmskaIcwMUw&maxResults=4&key=${YOUTUBE_API_KEY}
-          subrequests:
-            ch2:
-              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCqxkMCK3t6bTfsozawzU2VA&maxResults=3&key=${YOUTUBE_API_KEY}
-            ch3:
-              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCZguEMl05Ft8zZ60YeD-GJQ&maxResults=3&key=${YOUTUBE_API_KEY}
-            ch4:
-              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCBEGcyJUC-0SFTJ1t45yOzw&maxResults=3&key=${YOUTUBE_API_KEY}
-            ch5:
-              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCklYWGTK7sMAN5SBklO-nTw&maxResults=3&key=${YOUTUBE_API_KEY}
-            ch6:
-              url: https://www.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId=UCttffEucm1BxYqrQsdzs6pQ&maxResults=3&key=${YOUTUBE_API_KEY}
-          cache: 30m
-          template: |
-            <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin;">
-              {{ range .JSON.Array "items" }}
-                {{ if eq (.String "snippet.type") "upload" }}
-                <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                    <div style="padding: 10px;">
-                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
-                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
-                    </div>
-                  </div>
-                </a>
-                {{ end }}
-              {{ end }}
-
-              {{ range (.Subrequest "ch2").JSON.Array "items" }}
-                {{ if eq (.String "snippet.type") "upload" }}
-                <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                    <div style="padding: 10px;">
-                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
-                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
-                    </div>
-                  </div>
-                </a>
-                {{ end }}
-              {{ end }}
-
-              {{ range (.Subrequest "ch3").JSON.Array "items" }}
-                {{ if eq (.String "snippet.type") "upload" }}
-                <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                    <div style="padding: 10px;">
-                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
-                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
-                    </div>
-                  </div>
-                </a>
-                {{ end }}
-              {{ end }}
-
-              {{ range (.Subrequest "ch4").JSON.Array "items" }}
-                {{ if eq (.String "snippet.type") "upload" }}
-                <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                    <div style="padding: 10px;">
-                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
-                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
-                    </div>
-                  </div>
-                </a>
-                {{ end }}
-              {{ end }}
-
-              {{ range (.Subrequest "ch5").JSON.Array "items" }}
-                {{ if eq (.String "snippet.type") "upload" }}
-                <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                    <div style="padding: 10px;">
-                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
-                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
-                    </div>
-                  </div>
-                </a>
-                {{ end }}
-              {{ end }}
-
-              {{ range (.Subrequest "ch6").JSON.Array "items" }}
-                {{ if eq (.String "snippet.type") "upload" }}
-                <a href="https://www.youtube.com/watch?v={{ .String "contentDetails.upload.videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <img src="{{ .String "snippet.thumbnails.high.url" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                    <div style="padding: 10px;">
-                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "snippet.title" }}</div>
-                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "snippet.channelTitle" }}</div>
-                    </div>
-                  </div>
-                </a>
-                {{ end }}
-              {{ end }}
-            </div>
+          cache: 1h
+          limit: 20
+          channels:
+            - UCNUbP4RR0F25OmskaIcwMUw  # A Boat in the Woods
+            - UCqxkMCK3t6bTfsozawzU2VA  # Dapper Notebooks & Stationery
+            - UCZguEMl05Ft8zZ60YeD-GJQ  # Rainfall Projects
+            - UCBEGcyJUC-0SFTJ1t45yOzw  # Modest Mouse
+            - UCklYWGTK7sMAN5SBklO-nTw  # Design Milk
+            - UCttffEucm1BxYqrQsdzs6pQ  # Typewriter Chicago
 
         - type: group
           css-class: mo-reddit
