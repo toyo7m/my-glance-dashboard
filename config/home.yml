@@ -403,8 +403,12 @@
 
         - type: html
           title: Companion
+          # Loaded from the GitHub raw URL, not /assets/whale.gif: Hugging Face stores
+          # the GIF as a Git LFS pointer in the Space repo, and the Docker build bakes
+          # in the 132-byte pointer (LFS isn't resolved at build time) — so the served
+          # file is a broken stub. GitHub raw serves the real binary directly.
           source: |
-            <img src="/assets/whale.gif"
+            <img src="https://raw.githubusercontent.com/toyo7m/my-glance-dashboard/main/assets/whale.gif"
                  style="width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 14px; opacity: 0.9;"
                  alt="Companion">
 
