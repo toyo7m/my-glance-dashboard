@@ -456,3 +456,262 @@
               </form>
               <ul id="td-list" class="list list-gap-10"><li class="color-paragraph" style="opacity:.6">Loading…</li></ul>
             </div>
+
+# =====================================================================
+# Homelab — folded in from the standalone vista-glance instance
+# (glance.vistardg.com :8093) on 2026-08-06, which was retired after.
+#
+# Every widget here reads a status feed on the HOST's loopback:
+#   8080/status.json = vista-rdg host (+ its systemd units array)
+#   8081/status.json = media          8082 = fridge kiosk
+#   8084/status.json = LAN reachability
+# Those pollers bind 127.0.0.1 only, which is why the unit runs
+# Network=host. See quadlet/vista-sassafras.container.
+#
+# Weather and Search are deliberately NOT repeated here — both already
+# live on the Home tab.
+# =====================================================================
+- name: Homelab
+  columns:
+    # ================================================== LEFT (small)
+    - size: small
+      widgets:
+        # Reachability only, no throughput. The old version of this widget led
+        # with a "traffic_mbps" headline and a Top-Talkers list, both sourced
+        # from ntopng at 192.168.86.64 — the retired Mac Pro. That host has been
+        # gone for some time, so the feed had been serving 0.0 Mbps and an empty
+        # talkers list: a confident-looking zero rather than a visible failure.
+        # Those two fields are dropped rather than ported. wan / nodes / latency
+        # below come from the ping-based checks and are real.
+        #
+        # A replacement throughput source from the Omada controller's API has
+        # been scoped but NOT built. When it lands, this is where it goes back.
+        - type: custom-api
+          title: Network
+          cache: 10s
+          url: http://127.0.0.1:8084/status.json
+          template: |
+            {{ $s := .JSON }}
+            {{ $wan := $s.String "wan.state" }}
+            <div class="flex justify-between items-center margin-bottom-10">
+              <div>
+                <div class="color-paragraph size-h6">WAN</div>
+                <div class="size-h3">
+                  {{ if eq $wan "online" }}<span class="color-positive">● online</span>
+                  {{ else if eq $wan "unknown" }}<span class="color-paragraph">unknown</span>
+                  {{ else }}<span class="color-negative">▲ {{ $wan }}</span>{{ end }}
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="color-paragraph size-h6">Latency</div>
+                <div class="size-h5 color-highlight">{{ $s.String "internet_latency_state" }}</div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center size-h6 margin-bottom-10">
+              <span class="color-positive">● {{ $s.Int "nodes.live" }} live</span>
+              {{ if gt ($s.Int "nodes.offline") 0 }}
+                <span class="color-negative">{{ $s.Int "nodes.offline" }} offline</span>
+              {{ else }}
+                <span class="color-paragraph">0 offline</span>
+              {{ end }}
+            </div>
+
+            <div class="margin-bottom-10">
+              <div class="color-paragraph size-h6 margin-bottom-3">Nodes</div>
+              <div class="size-h6">
+                {{ if eq ($s.String "network_severity") "ok" }}<span class="color-positive">{{ $s.String "network_detail" }}</span>
+                {{ else if eq ($s.String "network_severity") "critical" }}<span class="color-negative">{{ $s.String "network_detail" }}</span>
+                {{ else }}<span class="color-primary">{{ $s.String "network_detail" }}</span>{{ end }}
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center size-h6">
+              <span class="color-paragraph">Services</span>
+              {{ $up := $s.Int "services.up" }}{{ $tot := $s.Int "services.total" }}
+              {{ if eq $up $tot }}<span class="color-positive">{{ $up }}/{{ $tot }} up</span>
+              {{ else }}<span class="color-primary">{{ $up }}/{{ $tot }} up</span>{{ end }}
+            </div>
+
+        - type: bookmarks
+          title: Quick Links
+          groups:
+            # ntopng (192.168.86.64:3001) was dropped here on 2026-08-06 — it ran
+            # on the retired Mac Pro and had been timing out for some time.
+            - title: VISTA RDG
+              links:
+                - title: Chore Admin
+                  url: http://192.168.86.49:8092/
+                  icon: si:todoist
+                - title: Cockpit
+                  url: https://192.168.86.49:9090/
+                  icon: si:cockpit
+                - title: Fridge Dashboard API
+                  url: http://192.168.86.49:8090/api/fridge-dashboard
+                  icon: si:homeassistant
+
+        - type: releases
+          title: Updates
+          cache: 6h
+          repositories:
+            - glanceapp/glance
+
+    # ================================================== CENTER (full)
+    - size: full
+      widgets:
+        # ---- vista-rdg host ------------------------------------------
+        - type: custom-api
+          title: VISTA RDG — Host
+          cache: 10s
+          url: http://127.0.0.1:8080/status.json
+          template: |
+            {{ $s := .JSON }}
+            {{ $cpu := $s.Float "system.cpu_percent" }}
+            {{ $ram := mul (div (toFloat ($s.Int "system.ram_used_bytes")) (toFloat ($s.Int "system.ram_total_bytes"))) 100.0 }}
+            {{ $disk := $s.Float "system.root_fs_used_percent" }}
+            <div class="flex items-center gap-15 margin-bottom-15">
+              <svg style="width:30px;height:30px;flex:0 0 auto;color:var(--color-primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="18" height="5" rx="1"></rect><rect x="3" y="9.5" width="18" height="5" rx="1"></rect><rect x="3" y="15.5" width="18" height="5" rx="1"></rect></svg>
+              <div class="flex justify-between items-center" style="flex:1;">
+                <div class="size-h3">{{ if eq ($s.String "overall_state") "healthy" }}<span class="color-positive">● HEALTHY</span>{{ else }}<span class="color-negative">▲ {{ $s.String "overall_state" }}</span>{{ end }}</div>
+                <div class="color-paragraph size-h6">{{ $s.String "host.hostname" }} · up {{ printf "%.1f" (div ($s.Float "host.uptime_seconds") 86400.0) }}d</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+              {{ $cpuC := "var(--color-positive)" }}{{ if ge $cpu 90.0 }}{{ $cpuC = "var(--color-negative)" }}{{ else if ge $cpu 70.0 }}{{ $cpuC = "var(--color-primary)" }}{{ end }}
+              {{ $ramC := "var(--color-positive)" }}{{ if ge $ram 90.0 }}{{ $ramC = "var(--color-negative)" }}{{ else if ge $ram 75.0 }}{{ $ramC = "var(--color-primary)" }}{{ end }}
+              {{ $diskC := "var(--color-positive)" }}{{ if ge $disk 90.0 }}{{ $diskC = "var(--color-negative)" }}{{ else if ge $disk 75.0 }}{{ $diskC = "var(--color-primary)" }}{{ end }}
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">CPU</span><span class="size-h4" style="color:{{ $cpuC }};">{{ printf "%.0f" $cpu }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $cpu }}%;background:{{ $cpuC }};"></div></div></div>
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">RAM</span><span class="size-h4" style="color:{{ $ramC }};">{{ printf "%.0f" $ram }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $ram }}%;background:{{ $ramC }};"></div></div></div>
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">Disk /</span><span class="size-h4" style="color:{{ $diskC }};">{{ printf "%.0f" $disk }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $disk }}%;background:{{ $diskC }};"></div></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;" class="size-h6">
+              <div><div class="color-paragraph">CPU temp</div><div class="color-highlight size-h5">{{ printf "%.0f" ($s.Float "system.cpu_temp_celsius") }}°C</div></div>
+              <div><div class="color-paragraph">NVMe temp</div><div class="color-highlight size-h5">{{ printf "%.0f" ($s.Float "system.nvme_temp_celsius") }}°C</div></div>
+              <div><div class="color-paragraph">Load 1m</div><div class="color-highlight size-h5">{{ printf "%.2f" ($s.Float "system.load_avg_1m") }}</div></div>
+              <div><div class="color-paragraph">RAM used</div><div class="color-highlight size-h5">{{ printf "%.1f" (div (toFloat ($s.Int "system.ram_used_bytes")) 1073741824.0) }} GB</div></div>
+            </div>
+            <div class="color-paragraph size-h6 margin-top-10">{{ $s.String "network.active_interface" }} · {{ $s.String "network.local_ipv4" }} · {{ $s.Int "system.cpu_cores_logical" }} cores</div>
+
+        # ---- media ---------------------------------------------------
+        # Was "Trashcan — Mac Pro". That cylinder was retired when the box
+        # became the current i7-6700K rebuild; it is `media` everywhere else
+        # in the homelab (media.vistardg.com, the SSH host, Caddy upstreams).
+        # The feed's collector was renamed to status-report-media.py in the
+        # same pass, and its hardcoded GPU/storage figures corrected — it had
+        # been reporting the Mac Pro's Tahiti XT cards and 8 GB of VRAM.
+        - type: custom-api
+          title: media — Jellyfin · arr · LLM
+          cache: 15s
+          url: http://127.0.0.1:8081/status.json
+          template: |
+            {{ $s := .JSON }}
+            {{ $cpu := $s.Float "cpu.percent" }}
+            {{ $ram := mul (div ($s.Float "ram.used_gb") ($s.Float "ram.total_gb")) 100.0 }}
+            {{ $vram := mul (div ($s.Float "gpu.vram_used_gb") ($s.Float "gpu.vram_total_gb")) 100.0 }}
+            {{ $store := mul (div ($s.Float "storage.used_tb") ($s.Float "storage.total_tb")) 100.0 }}
+            <div class="flex items-center gap-15 margin-bottom-12">
+              <svg style="width:30px;height:30px;flex:0 0 auto;color:var(--color-primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.5" width="14" height="19" rx="1.5"></rect><line x1="8.5" y1="6.5" x2="15.5" y2="6.5"></line><line x1="8.5" y1="9.5" x2="15.5" y2="9.5"></line><circle cx="12" cy="16.5" r="2.5"></circle></svg>
+              <div class="flex justify-between items-center" style="flex:1;">
+                <div class="size-h6 color-paragraph">{{ $s.String "node.role_primary" }}</div>
+                <div class="size-h5">{{ if eq ($s.String "state") "ready" }}<span class="color-positive">● ready</span>{{ else }}<span class="color-primary">{{ $s.String "state" }}</span>{{ end }}</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
+              {{ $cpuC := "var(--color-positive)" }}{{ if ge $cpu 90.0 }}{{ $cpuC = "var(--color-negative)" }}{{ else if ge $cpu 70.0 }}{{ $cpuC = "var(--color-primary)" }}{{ end }}
+              {{ $ramC := "var(--color-positive)" }}{{ if ge $ram 90.0 }}{{ $ramC = "var(--color-negative)" }}{{ else if ge $ram 75.0 }}{{ $ramC = "var(--color-primary)" }}{{ end }}
+              {{ $vramC := "var(--color-positive)" }}{{ if ge $vram 90.0 }}{{ $vramC = "var(--color-negative)" }}{{ else if ge $vram 75.0 }}{{ $vramC = "var(--color-primary)" }}{{ end }}
+              {{ $storeC := "var(--color-positive)" }}{{ if ge $store 90.0 }}{{ $storeC = "var(--color-negative)" }}{{ else if ge $store 75.0 }}{{ $storeC = "var(--color-primary)" }}{{ end }}
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">CPU</span><span class="size-h4" style="color:{{ $cpuC }};">{{ printf "%.0f" $cpu }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $cpu }}%;background:{{ $cpuC }};"></div></div></div>
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">RAM</span><span class="size-h4" style="color:{{ $ramC }};">{{ printf "%.0f" $ram }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $ram }}%;background:{{ $ramC }};"></div></div></div>
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">VRAM</span><span class="size-h4" style="color:{{ $vramC }};">{{ printf "%.0f" $vram }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $vram }}%;background:{{ $vramC }};"></div></div></div>
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">Storage</span><span class="size-h4" style="color:{{ $storeC }};">{{ printf "%.0f" $store }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $store }}%;background:{{ $storeC }};"></div></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;" class="size-h6">
+              <div><div class="color-paragraph">Temp</div><div class="color-highlight size-h5">{{ $s.Int "temp.fahrenheit" }}°F</div></div>
+              <div><div class="color-paragraph">Pool</div><div class="color-highlight size-h5">{{ printf "%.1f/%.1f" ($s.Float "storage.used_tb") ($s.Float "storage.total_tb") }} TB</div></div>
+              <div><div class="color-paragraph">Jellyfin</div><div class="color-highlight size-h5">{{ $s.Int "jellyfin.streams" }} streams</div></div>
+              <div><div class="color-paragraph">Containers</div><div class="color-highlight size-h5">{{ $s.Int "containers.running" }}/{{ $s.Int "containers.total" }}</div></div>
+            </div>
+            <div class="color-paragraph size-h6 margin-top-10">
+              {{ $s.String "gpu.name" }} · {{ printf "%.1f / %.1f GB VRAM" ($s.Float "gpu.vram_used_gb") ($s.Float "gpu.vram_total_gb") }} · {{ $s.Int "llms.loaded" }}/{{ $s.Int "llms.total" }} LLMs loaded
+            </div>
+            <div class="color-paragraph size-h6">RAM {{ printf "%.1f / %.1f GB" ($s.Float "ram.used_gb") ($s.Float "ram.total_gb") }}</div>
+
+        # ---- Fridge (Surface Pro) ------------------------------------
+        - type: custom-api
+          title: Fridge — Surface Pro
+          cache: 15s
+          url: http://127.0.0.1:8082/status.json
+          template: |
+            {{ $s := .JSON }}
+            {{ $cpu := $s.Float "cpu.percent" }}
+            {{ $ram := mul (div ($s.Float "ram.used_gb") ($s.Float "ram.total_gb")) 100.0 }}
+            {{ $disk := $s.Float "storage.percent" }}
+            {{ $bat := $s.Int "power.battery_percent" }}
+            <div class="flex items-center gap-15 margin-bottom-12">
+              <svg style="width:30px;height:30px;flex:0 0 auto;color:var(--color-primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2"></rect><line x1="6" y1="11" x2="18" y2="11"></line></svg>
+              <div class="flex justify-between items-center" style="flex:1;">
+                <div class="size-h6 color-paragraph">{{ $s.String "node.mode" }} · {{ $s.String "node.role" }}</div>
+                <div class="size-h5">{{ if or (eq ($s.String "state") "synced") (eq ($s.String "state") "ready") }}<span class="color-positive">● {{ $s.String "state" }}</span>{{ else }}<span class="color-primary">{{ $s.String "state" }}</span>{{ end }}</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+              {{ $cpuC := "var(--color-positive)" }}{{ if ge $cpu 90.0 }}{{ $cpuC = "var(--color-negative)" }}{{ else if ge $cpu 70.0 }}{{ $cpuC = "var(--color-primary)" }}{{ end }}
+              {{ $ramC := "var(--color-positive)" }}{{ if ge $ram 90.0 }}{{ $ramC = "var(--color-negative)" }}{{ else if ge $ram 75.0 }}{{ $ramC = "var(--color-primary)" }}{{ end }}
+              {{ $diskC := "var(--color-positive)" }}{{ if ge $disk 90.0 }}{{ $diskC = "var(--color-negative)" }}{{ else if ge $disk 75.0 }}{{ $diskC = "var(--color-primary)" }}{{ end }}
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">CPU</span><span class="size-h4" style="color:{{ $cpuC }};">{{ printf "%.0f" $cpu }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $cpu }}%;background:{{ $cpuC }};"></div></div></div>
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">RAM</span><span class="size-h4" style="color:{{ $ramC }};">{{ printf "%.0f" $ram }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $ram }}%;background:{{ $ramC }};"></div></div></div>
+              <div><div class="flex justify-between items-end"><span class="color-paragraph size-h6">Storage</span><span class="size-h4" style="color:{{ $diskC }};">{{ printf "%.0f" $disk }}%</span></div><div style="height:6px;border-radius:4px;background:var(--color-separator);margin-top:6px;overflow:hidden;"><div style="height:100%;width:{{ printf "%.0f" $disk }}%;background:{{ $diskC }};"></div></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;" class="size-h6">
+              <div><div class="color-paragraph">Battery</div><div class="color-highlight size-h5">{{ $bat }}% ({{ $s.String "power.state" }})</div></div>
+              <div><div class="color-paragraph">Free disk</div><div class="color-highlight size-h5">{{ $s.Int "storage.free_gb" }} GB</div></div>
+              <div><div class="color-paragraph">RAM</div><div class="color-highlight size-h5">{{ printf "%.1f / %.1f GB" ($s.Float "ram.used_gb") ($s.Float "ram.total_gb") }}</div></div>
+            </div>
+
+        # ---- Services up/down ----------------------------------------
+        - type: monitor
+          title: Services
+          cache: 30s
+          sites:
+            # ntopng (192.168.86.64:3001) was dropped here on 2026-08-06 along
+            # with its Quick Link — it lived on the retired Mac Pro and had been
+            # reporting "Timed Out" rather than anything actionable.
+            - title: Main Kiosk
+              url: http://127.0.0.1:8080/
+              icon: si:googlechrome
+            - title: Fridge API
+              url: http://127.0.0.1:8090/api/fridge-dashboard
+              icon: si:homeassistant
+            - title: Chores API
+              url: http://127.0.0.1:8091/
+              alt-status-codes: [404]
+              icon: si:todoist
+            - title: Chore Admin
+              url: http://127.0.0.1:8092/
+              alt-status-codes: [301, 302, 303, 401, 403]
+              icon: si:todoist
+            - title: Cockpit
+              url: http://127.0.0.1:9090/
+              icon: si:cockpit
+
+        # ---- systemd units -------------------------------------------
+        - type: custom-api
+          title: systemd Units
+          cache: 15s
+          url: http://127.0.0.1:8080/status.json
+          template: |
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 28px;">
+            {{ range .JSON.Array "services" }}
+              <div class="flex justify-between items-center">
+                <span class="color-paragraph size-h6">{{ .String "name" }}</span>
+                {{ if and (eq (.String "active_state") "active") (or (eq (.String "sub_state") "running") (eq (.String "sub_state") "listening") (eq (.String "sub_state") "waiting") (eq (.String "sub_state") "exited") (eq (.String "sub_state") "mounted")) }}
+                  <span class="color-positive size-h6">● {{ .String "sub_state" }}</span>
+                {{ else if eq (.String "active_state") "failed" }}
+                  <span class="color-negative size-h6">▲ failed</span>
+                {{ else }}
+                  <span class="color-negative size-h6">{{ .String "active_state" }}/{{ .String "sub_state" }}</span>
+                {{ end }}
+              </div>
+            {{ end }}
+            </div>

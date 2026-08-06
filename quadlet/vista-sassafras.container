@@ -7,14 +7,27 @@
 #
 # Reached at https://sassafras.vistardg.com (Caddy -> 127.0.0.1:8094).
 #
-# NOT to be confused with vista-glance.service, the homelab server-stats Glance
-# on 8093 / glance.vistardg.com. Separate deployment, separate config, separate
-# purpose. Do not merge them.
+# Supersedes vista-glance.service, the homelab server-stats Glance that ran on
+# 8093 / glance.vistardg.com. Its Homelab page was folded in here as a second
+# tab on 2026-08-06 and that unit was retired.
 #
-# Unlike vista-glance this does NOT use Network=host: every data source is on
-# the public internet, nothing on the LAN, so it gets an ordinary bridge network
-# and publishes to LOOPBACK ONLY. Caddy is the only way in — no firewalld port,
-# no LAN-direct access. Same posture as vista-mealie.
+# Network=host, for the same reason vista-glance needed it: the Homelab tab's
+# widgets read the kiosk status feeds on the host's loopback (8080 host, 8081
+# media, 8082 fridge, 8084 LAN), and those pollers bind 127.0.0.1 ONLY. On a
+# bridge network they are unreachable by every route — host.containers.internal
+# (10.88.0.1) and the LAN address both get connection-refused, because the
+# listener is not on those interfaces at all.
+#
+# The loopback-only posture is UNCHANGED by this. Under Network=host the bind
+# is governed by `server.host` in config/glance.yml, which is set to 127.0.0.1
+# — so this still listens on loopback only, still has no firewalld port, and
+# still has no LAN-direct access. Caddy and the Cloudflare tunnel remain the
+# only ways in, and both already target 127.0.0.1:8094. Same posture as
+# vista-mealie, arrived at differently.
+#
+# If server.host is ever set back to 0.0.0.0, this becomes LAN-reachable on
+# :8094 immediately, with no firewalld change to warn you. The two settings
+# move together.
 #
 # Config + assets are bind-mounted read-only from the git clone at
 # /srv/vista-rdg/apps/sassafras (repo: github.com/toyo7m/my-glance-dashboard).
@@ -33,7 +46,9 @@ Wants=network-online.target
 Image=docker.io/glanceapp/glance:v0.8.5
 ContainerName=vista-sassafras
 
-PublishPort=127.0.0.1:8094:8094
+# See the header: required to reach the loopback-bound status feeds. The bind
+# address is config/glance.yml's `server.host: 127.0.0.1`, not a PublishPort.
+Network=host
 
 Volume=/srv/vista-rdg/apps/sassafras/config:/app/config:ro,Z
 Volume=/srv/vista-rdg/apps/sassafras/assets:/app/assets:ro,Z
