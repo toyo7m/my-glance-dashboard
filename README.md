@@ -25,7 +25,31 @@ self-hosted on **VISTA** (the household homelab box).
 | `assets/marginalia.js` + `.json` | Literary Marginalia — 114-quote corpus, picked at random per page load |
 | `assets/todoist.js` | Interactive Todoist list (add / complete) |
 | `assets/whale.gif` | The companion |
-| `quadlet/vista-sassafras.container` | The systemd unit that runs it |
+| `quadlet/vista-sassafras.container` | The systemd unit that runs it (rootful) |
+| `quadlet/sassafras-tunnel.container` | Cloudflare Tunnel connector (**rootless**, user `toyo7m`) |
+
+## Access paths
+
+Two different paths reach the same container, and they are gated differently.
+
+| From | Path | Gates |
+|---|---|---|
+| **LAN** | dnsmasq → `192.168.86.49` → Caddy `:443` → `127.0.0.1:8094` | Glance login only |
+| **Internet** | Cloudflare edge → tunnel → `127.0.0.1:8094` | Cloudflare Access OTP, **then** Glance login |
+
+The tunnel is never involved on the LAN — dnsmasq is authoritative for
+`vistardg.com` inside the house and answers with VISTA's address directly, so
+Cloudflare Access does not apply there. Glance's own auth is what protects LAN
+access. One prompt inside, two outside; that asymmetry is intentional.
+
+The tunnel routes **`sassafras.vistardg.com` only**. Everything else on the box,
+including the homelab stats Glance on 8093, stays LAN-only.
+
+Rootless notes: the connector runs as `toyo7m`, so it is managed with
+`systemctl --user` and needs `loginctl enable-linger toyo7m` (already set) to
+survive logout and reboot. Its token lives in `~/.config/sassafras-tunnel.env`
+(`0600`), not `/etc/vista-rdg/` — a rootless container cannot read a root-only
+file.
 
 ## Deploying a change
 
