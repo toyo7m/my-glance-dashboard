@@ -1,0 +1,42 @@
+# Cloudflare Tunnel connector for the SASSAFRAS dashboard.
+#
+# ROOTLESS quadlet - runs as user `toyo7m`, not root. Manage with:
+#   systemctl --user daemon-reload
+#   systemctl --user {start,stop,status} sassafras-tunnel.service
+# Requires `loginctl enable-linger toyo7m` (done) so it survives logout/reboot.
+#
+# Outbound-only: cloudflared dials out to Cloudflare and holds the connection
+# open. Nothing is port-forwarded, no inbound firewall rule exists, and the
+# WAN is CGNAT anyway.
+#
+# Network=host so the connector can reach Glance on the host's loopback at
+# 127.0.0.1:8094 - the same loopback-only bind Caddy uses. The tunnel's route
+# is configured dashboard-side (Public Hostname -> HTTP -> 127.0.0.1:8094),
+# not here.
+#
+# Scope: this tunnel serves sassafras.vistardg.com ONLY. The homelab
+# server-stats Glance on 8093 (glance.vistardg.com) is deliberately NOT
+# routed through it and stays LAN-only.
+#
+# TUNNEL_TOKEN comes from /etc/vista-rdg/sassafras-tunnel.env (root-owned
+# 0600, readable by this unit via the group). Never in the repo.
+
+[Unit]
+Description=Cloudflare Tunnel connector for sassafras.vistardg.com
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=docker.io/cloudflare/cloudflared:latest
+ContainerName=sassafras-tunnel
+Network=host
+EnvironmentFile=%h/.config/sassafras-tunnel.env
+Exec=tunnel --no-autoupdate run
+NoNewPrivileges=true
+
+[Service]
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

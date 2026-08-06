@@ -1,13 +1,33 @@
+# SASSAFRAS — personal command-center dashboard.
+#
+# Runs on VISTA as the rootful Podman Quadlet `vista-sassafras.service`
+# (quadlet/vista-sassafras.container), reached at https://sassafras.vistardg.com
+# via Caddy -> 127.0.0.1:8094.
+#
+# The container publishes to LOOPBACK ONLY, so Caddy is the only way in: there
+# is deliberately no firewalld port and no LAN-direct access. Same posture as
+# mealie. (The *other* Glance on this box — the homelab server-stats instance on
+# 8093, glance.vistardg.com — is a separate deployment. Don't merge them.)
+#
+# Secrets come from /etc/vista-rdg/sassafras.env via the unit's EnvironmentFile:
+#   AUTH_SECRET_KEY     glance secret:make
+#   AUTH_PASSWORD_HASH  glance password:hash 'pw'
+#   WORKER_URL          https://sassafras-proxy.toyo7m.workers.dev
+#   DASHBOARD_KEY       shared key the Worker checks as X-Dashboard-Key
 server:
-  port: 7860
+  host: 0.0.0.0
+  port: 8094
+  # Mounted separately from the config dir (not nested inside it) so the two
+  # bind mounts don't overlap — nested mounts + SELinux :Z relabelling are fussy.
   assets-path: /app/assets
-  # Trust Hugging Face's reverse proxy so real client IPs are seen (auth rate-limiting)
+  # Caddy fronts this, so trust the proxy's forwarded client IP — Glance uses it
+  # to rate-limit auth attempts. Without this every attempt looks like one IP.
   proxied: true
 
-# Password-gate the whole dashboard. Values come from HF Space secrets — never committed.
-# A session cookie keeps your devices logged in. Generate the values with:
-#   glance secret:make            -> set as HF secret AUTH_SECRET_KEY
-#   glance password:hash 'pw'     -> set as HF secret AUTH_PASSWORD_HASH
+# Password-gates the whole dashboard. This is what actually protects LAN access:
+# LAN clients resolve sassafras.vistardg.com straight to VISTA via dnsmasq and
+# never touch the Cloudflare tunnel, so Cloudflare Access is not in that path.
+# Access gates the external path only. Two prompts from outside, one from inside.
 auth:
   secret-key: ${AUTH_SECRET_KEY}
   users:
@@ -15,8 +35,7 @@ auth:
       password-hash: ${AUTH_PASSWORD_HASH}
 
 theme:
-  # Note: assets are cached by the browser, changes to the CSS file
-  # will not be reflected until the browser cache is cleared (Ctrl+F5)
+  # Browser-cached — CSS edits need a hard refresh (Cmd/Ctrl+Shift+R) to show.
   custom-css-file: /assets/user.css
 
 document:
@@ -25,6 +44,4 @@ document:
     <script src="/assets/marginalia.js" defer></script>
 
 pages:
-  # It's not necessary to create a new file for each page and include it, you can simply
-  # put its contents here, though multiple pages are easier to manage when separated
   - $include: home.yml

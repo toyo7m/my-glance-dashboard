@@ -20,15 +20,14 @@
   .mo-feeds                         { order: 4 !important; }  /* Feeds (RSS) */
   .widget-type-custom-api.no-header { order: 5 !important; }  /* Cubs */
   .mo-reddit                        { order: 6 !important; }  /* Reddit */
-  .mo-fantasy                       { order: 7 !important; }  /* Fantasy */
-  #td-app, .page-column > div:has(#td-app) { order: 8 !important; }  /* Tasks */
-  .widget-type-clock                { order: 9 !important; }  /* Clock */
-  .mo-mlb                           { order: 10 !important; } /* MLB Standings */
-  .mo-upcoming                      { order: 11 !important; } /* Upcoming */
-  #mg-app, .page-column > div:has(#mg-app) { order: 12 !important; } /* Marginalia */
-  .widget-type-bookmarks            { order: 13 !important; } /* Bookmarks */
-  .mo-youtube                       { order: 14 !important; } /* YouTube */
-  .page-column > img                { order: 15 !important; } /* Companion (whale) */
+  #td-app, .page-column > div:has(#td-app) { order: 7 !important; }  /* Tasks */
+  .widget-type-clock                { order: 8 !important; }  /* Clock */
+  .mo-mlb                           { order: 9 !important; }  /* MLB Standings */
+  .mo-upcoming                      { order: 10 !important; } /* Upcoming */
+  #mg-app, .page-column > div:has(#mg-app) { order: 11 !important; } /* Marginalia */
+  .widget-type-bookmarks            { order: 12 !important; } /* Bookmarks */
+  .mo-youtube                       { order: 13 !important; } /* YouTube */
+  .mo-companion                     { order: 14 !important; } /* Companion (whale) */
 }
 
 

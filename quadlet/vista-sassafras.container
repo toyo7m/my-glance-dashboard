@@ -1,0 +1,63 @@
+# SASSAFRAS personal dashboard — rootful Podman Quadlet unit.
+#
+# Install:  sudo cp quadlet/vista-sassafras.container /etc/containers/systemd/
+#           sudo systemctl daemon-reload && sudo systemctl start vista-sassafras.service
+# Edit:     change the file in /etc/containers/systemd/, then
+#           sudo systemctl daemon-reload && sudo systemctl restart vista-sassafras.service
+#
+# Reached at https://sassafras.vistardg.com (Caddy -> 127.0.0.1:8094).
+#
+# NOT to be confused with vista-glance.service, the homelab server-stats Glance
+# on 8093 / glance.vistardg.com. Separate deployment, separate config, separate
+# purpose. Do not merge them.
+#
+# Unlike vista-glance this does NOT use Network=host: every data source is on
+# the public internet, nothing on the LAN, so it gets an ordinary bridge network
+# and publishes to LOOPBACK ONLY. Caddy is the only way in — no firewalld port,
+# no LAN-direct access. Same posture as vista-mealie.
+#
+# Config + assets are bind-mounted read-only from the git clone at
+# /srv/vista-rdg/apps/sassafras (repo: github.com/toyo7m/my-glance-dashboard).
+# Deploying a config change is `git pull` + `systemctl restart` — no image
+# rebuild, matching how vista-glance is run.
+#
+# The image entrypoint hardcodes --config /app/config/glance.yml, so the config
+# mount target must be /app/config.
+
+[Unit]
+Description=SASSAFRAS personal dashboard (Glance, loopback 127.0.0.1:8094, via Caddy)
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=docker.io/glanceapp/glance:v0.8.5
+ContainerName=vista-sassafras
+
+PublishPort=127.0.0.1:8094:8094
+
+Volume=/srv/vista-rdg/apps/sassafras/config:/app/config:ro,Z
+Volume=/srv/vista-rdg/apps/sassafras/assets:/app/assets:ro,Z
+
+# AUTH_SECRET_KEY, AUTH_PASSWORD_HASH, WORKER_URL, DASHBOARD_KEY.
+# Root-only 0600, never in the repo.
+EnvironmentFile=/etc/vista-rdg/sassafras.env
+
+# Clock widget and RSS timestamps render Eastern rather than the container's UTC.
+Environment=TZ=America/New_York
+
+ReadOnly=true
+Tmpfs=/tmp
+NoNewPrivileges=true
+
+HealthCmd=CMD-SHELL wget -q -O /dev/null http://127.0.0.1:8094/ || exit 1
+HealthInterval=60s
+HealthTimeout=5s
+HealthRetries=3
+HealthStartPeriod=15s
+
+[Service]
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
