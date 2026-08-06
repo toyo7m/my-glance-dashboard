@@ -4,10 +4,18 @@
 # (quadlet/vista-sassafras.container), reached at https://sassafras.vistardg.com
 # via Caddy -> 127.0.0.1:8094.
 #
-# The container publishes to LOOPBACK ONLY, so Caddy is the only way in: there
-# is deliberately no firewalld port and no LAN-direct access. Same posture as
-# mealie. (The *other* Glance on this box — the homelab server-stats instance on
-# 8093, glance.vistardg.com — is a separate deployment. Don't merge them.)
+# Binds LOOPBACK ONLY, so Caddy is the only way in: there is deliberately no
+# firewalld port and no LAN-direct access. Same posture as mealie.
+#
+# The unit runs Network=host (it has to — the Homelab tab reads status feeds
+# that bind 127.0.0.1 on the host), so there is no PublishPort doing that
+# containment. `server.host` below IS the containment. Setting it to 0.0.0.0
+# would expose :8094 to the LAN immediately, with no firewalld change to warn
+# you. Leave it at 127.0.0.1.
+#
+# The homelab server-stats Glance that used to run beside this on 8093
+# (glance.vistardg.com) was folded into the Homelab page here and retired on
+# 2026-08-06. There is only one Glance on this box now.
 #
 # Secrets come from /etc/vista-rdg/sassafras.env via the unit's EnvironmentFile:
 #   AUTH_SECRET_KEY     glance secret:make
@@ -15,7 +23,9 @@
 #   WORKER_URL          https://sassafras-proxy.toyo7m.workers.dev
 #   DASHBOARD_KEY       shared key the Worker checks as X-Dashboard-Key
 server:
-  host: 0.0.0.0
+  # Loopback only — see the header. Under Network=host this is the ONLY thing
+  # keeping :8094 off the LAN.
+  host: 127.0.0.1
   port: 8094
   # Mounted separately from the config dir (not nested inside it) so the two
   # bind mounts don't overlap — nested mounts + SELinux :Z relabelling are fussy.
