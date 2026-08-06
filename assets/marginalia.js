@@ -1,6 +1,11 @@
-// Literary Marginalia widget — fetches one random quote from the Worker on every
-// page load (so it changes on refresh). Loaded via document.head; uses a
-// MutationObserver because Glance injects the widget HTML after page load.
+// Literary Marginalia widget — picks one random quote on every page load.
+//
+// The corpus used to live in the Cloudflare Worker (/marginalia). It is static
+// text, so it has no business being a network round-trip: it now ships as
+// assets/marginalia.json and is fetched from Glance's own asset server.
+//
+// Loaded via document.head; uses a MutationObserver because Glance injects the
+// widget HTML after page load.
 (function () {
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -8,16 +13,22 @@
     });
   }
 
+  function faint(app) {
+    app.innerHTML = '<div class="color-paragraph" style="text-align:center; opacity:.5;">—</div>';
+  }
+
   function init() {
     var app = document.getElementById("mg-app");
     if (!app || app.dataset.ready) return;
     app.dataset.ready = "1";
-    var worker = (app.dataset.worker || "").replace(/\/$/, "");
-    var key = app.dataset.key || "";
 
-    fetch(worker + "/marginalia", { headers: { "X-Dashboard-Key": key }, cache: "no-store" })
+    fetch("/assets/marginalia.json", { cache: "no-store" })
       .then(function (r) { return r.json(); })
-      .then(function (d) {
+      .then(function (data) {
+        var quotes = Array.isArray(data) ? data : data.quotes;
+        if (!quotes || !quotes.length) return faint(app);
+
+        var d = quotes[Math.floor(Math.random() * quotes.length)];
         var work = d.work ? ', <span style="font-style:italic;">' + esc(d.work) + "</span>" : "";
         app.innerHTML =
           '<div style="text-align:center; padding:4px 14px;">' +
@@ -25,9 +36,7 @@
           '<div class="size-h6 color-paragraph" style="margin-top:8px;">— ' + esc(d.author) + work + "</div>" +
           "</div>";
       })
-      .catch(function () {
-        app.innerHTML = '<div class="color-paragraph" style="text-align:center; opacity:.5;">—</div>';
-      });
+      .catch(function () { faint(app); });
   }
 
   function boot() {

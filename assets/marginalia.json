@@ -1,0 +1,481 @@
+{
+  "_comment": "Literary Marginalia corpus - 114 quotes, Bruce's own compilation. Recovered 2026-08-06 from the sassafras-proxy Worker's /marginalia endpoint (they had never been in this repo; commit 6f2cb95 added only the client JS). Shape: {quote, author, work?} - `work` is optional and renders italicised after the author.",
+  "quotes": [
+    {
+      "quote": "Ascension is easy.",
+      "author": "Kathleen Alcott"
+    },
+    {
+      "quote": "Just running. A pointless pastime I have bought into for reasons unknown to me.",
+      "author": "Kathleen Alcott",
+      "work": "Infinite Home"
+    },
+    {
+      "quote": "My work has been more of a partner to me than any person has been so far.",
+      "author": "Kathleen Alcott"
+    },
+    {
+      "quote": "The myth of this country is inherently neoliberal.",
+      "author": "Kathleen Alcott"
+    },
+    {
+      "quote": "Instead of waiting, there is writing.",
+      "author": "Roberto Bolaño"
+    },
+    {
+      "quote": "We never stop reading, although every book comes to an end, just as we never stop living, although death is certain.",
+      "author": "Roberto Bolaño",
+      "work": "Last Evenings on Earth"
+    },
+    {
+      "quote": "Write in the morning, revise in the afternoon, read at night.",
+      "author": "Roberto Bolaño"
+    },
+    {
+      "quote": "Anybody who whines about writer's block should be forced to clean squid all day.",
+      "author": "Anthony Bourdain"
+    },
+    {
+      "quote": "Life is complicated. It's filled with nuance. It's unsatisfying. If I believe in anything, it is doubt.",
+      "author": "Anthony Bourdain"
+    },
+    {
+      "quote": "Writing is a privilege and a luxury.",
+      "author": "Anthony Bourdain"
+    },
+    {
+      "quote": "You need a command of language, and the ability to say anything in an interesting way.",
+      "author": "Anthony Bourdain"
+    },
+    {
+      "quote": "I've only ever had any success by doing my own weird thing.",
+      "author": "Susanna Clarke"
+    },
+    {
+      "quote": "The Beauty of the House is immeasurable; its Kindness infinite.",
+      "author": "Susanna Clarke",
+      "work": "Piranesi"
+    },
+    {
+      "quote": "These people seem to think I'm a writer. Possibly, I am.",
+      "author": "Susanna Clarke"
+    },
+    {
+      "quote": "Write the way you can and not the way people tell you you are supposed to.",
+      "author": "Susanna Clarke"
+    },
+    {
+      "quote": "Everything was just very depressing, so I wrote what I thought was just a completely pointless book.",
+      "author": "Joshua Cohen"
+    },
+    {
+      "quote": "I couldn't write a book that doesn't acknowledge the role of books in the world today.",
+      "author": "Joshua Cohen"
+    },
+    {
+      "quote": "I try and always have my bookends.",
+      "author": "Joshua Cohen"
+    },
+    {
+      "quote": "The book is the oil painting above the grand piano of the future.",
+      "author": "Joshua Cohen"
+    },
+    {
+      "quote": "He had no way of making himself heard.",
+      "author": "David Diop"
+    },
+    {
+      "quote": "I wanted to allow the reader to inhabit the mind of a young African man.",
+      "author": "David Diop"
+    },
+    {
+      "quote": "That's war: it's when God lags behind the music of men.",
+      "author": "David Diop",
+      "work": "At Night All Blood Is Black"
+    },
+    {
+      "quote": "The choice of a stream-of-consciousness narrative allowed me to amplify the internal voice of this young man.",
+      "author": "David Diop"
+    },
+    {
+      "quote": "I acknowledge the Furies. I believe in them.",
+      "author": "Theodore Dreiser"
+    },
+    {
+      "quote": "Our first great duty then is to learn to think.",
+      "author": "Theodore Dreiser"
+    },
+    {
+      "quote": "The literature of every nation reflects the temperament of its people.",
+      "author": "Theodore Dreiser"
+    },
+    {
+      "quote": "Words are but the vague shadows of the volumes we mean.",
+      "author": "Theodore Dreiser"
+    },
+    {
+      "quote": "Cultures that live in isolation perish.",
+      "author": "Carlos Fuentes"
+    },
+    {
+      "quote": "Don't classify me, read me. I'm a writer, not a genre.",
+      "author": "Carlos Fuentes"
+    },
+    {
+      "quote": "I believe in people who are looking for the truth, not people who have found the truth.",
+      "author": "Carlos Fuentes"
+    },
+    {
+      "quote": "I never find a truth.",
+      "author": "Carlos Fuentes"
+    },
+    {
+      "quote": "Every piece of writing starts from what I call a grit.",
+      "author": "Rumer Godden"
+    },
+    {
+      "quote": "Every time a child, any child, is born, it is new and different; that is the wonder.",
+      "author": "Rumer Godden"
+    },
+    {
+      "quote": "I always thank God that we did not have sensible parents.",
+      "author": "Rumer Godden"
+    },
+    {
+      "quote": "You don't give up writing until writing gives you up.",
+      "author": "Rumer Godden"
+    },
+    {
+      "quote": "If we don't change the narrative of human supremacy, we're in profound trouble.",
+      "author": "Lauren Groff"
+    },
+    {
+      "quote": "Marriage is made of lies. Kind ones, mostly.",
+      "author": "Lauren Groff",
+      "work": "Fates and Furies"
+    },
+    {
+      "quote": "My art is an art of synthesis.",
+      "author": "Lauren Groff"
+    },
+    {
+      "quote": "Polemical art is the worst possible art.",
+      "author": "Lauren Groff"
+    },
+    {
+      "quote": "George Washington Crosby began to hallucinate eight days before he died.",
+      "author": "Paul Harding",
+      "work": "Tinkers"
+    },
+    {
+      "quote": "I wouldn't discourage anybody from being a writer.",
+      "author": "Paul Harding"
+    },
+    {
+      "quote": "Slow down.",
+      "author": "Paul Harding"
+    },
+    {
+      "quote": "The book was mostly written on Post-it notes.",
+      "author": "Paul Harding"
+    },
+    {
+      "quote": "I write novellas because I don't like loose sprawling prose.",
+      "author": "Jim Harrison"
+    },
+    {
+      "quote": "Manual labor was very serene compared to being in an office.",
+      "author": "Jim Harrison"
+    },
+    {
+      "quote": "The danger of civilization, of course, is that you will piss away your life on nonsense.",
+      "author": "Jim Harrison"
+    },
+    {
+      "quote": "You don't write--an artist doesn't create, or very rarely creates--good art in support of different causes.",
+      "author": "Jim Harrison"
+    },
+    {
+      "quote": "Better late than never.",
+      "author": "John Heywood"
+    },
+    {
+      "quote": "Haste makes waste.",
+      "author": "John Heywood",
+      "work": "Proverbs (1546)"
+    },
+    {
+      "quote": "Two heads are better than one.",
+      "author": "John Heywood"
+    },
+    {
+      "quote": "When the iron is hot, strike.",
+      "author": "John Heywood"
+    },
+    {
+      "quote": "I had never known, never even imagined for a heartbeat, that there might be a place for people like us.",
+      "author": "Denis Johnson",
+      "work": "Jesus' Son"
+    },
+    {
+      "quote": "If you write fiction, you're by yourself.",
+      "author": "Denis Johnson"
+    },
+    {
+      "quote": "Once you tell it, it's not worth writing down.",
+      "author": "Denis Johnson"
+    },
+    {
+      "quote": "Write only about things you wouldn't dare confide in anyone.",
+      "author": "Denis Johnson"
+    },
+    {
+      "quote": "Elegance, to me, is writing just enough.",
+      "author": "Claire Keegan"
+    },
+    {
+      "quote": "I can't explain my work. I just write stories.",
+      "author": "Claire Keegan"
+    },
+    {
+      "quote": "I love to see prose being written economically.",
+      "author": "Claire Keegan"
+    },
+    {
+      "quote": "Was there any point in being alive without helping one another?",
+      "author": "Claire Keegan",
+      "work": "Small Things Like These"
+    },
+    {
+      "quote": "Description, more than dialogue, resonates with what seems salient to me in the world.",
+      "author": "Vincenzo Latronico"
+    },
+    {
+      "quote": "I have a terrible ear for dialogue.",
+      "author": "Vincenzo Latronico"
+    },
+    {
+      "quote": "I left Italy out of sadness.",
+      "author": "Vincenzo Latronico"
+    },
+    {
+      "quote": "It's all completely perfect. It's just like it is in the pictures.",
+      "author": "Vincenzo Latronico",
+      "work": "Perfection"
+    },
+    {
+      "quote": "A good bombing begins everywhere at once.",
+      "author": "Karan Mahajan",
+      "work": "The Association of Small Bombs"
+    },
+    {
+      "quote": "The novel looks at both victims and perpetrators.",
+      "author": "Karan Mahajan"
+    },
+    {
+      "quote": "The only memorial the Lajpat Nagar bombing is ever likely to get.",
+      "author": "Karan Mahajan"
+    },
+    {
+      "quote": "There is no such thing as a small bomb.",
+      "author": "Karan Mahajan"
+    },
+    {
+      "quote": "I wanted to write about how people survive the turn toward extremism.",
+      "author": "Megha Majumdar"
+    },
+    {
+      "quote": "I'm so grateful for virtual communities and virtual conversations.",
+      "author": "Megha Majumdar"
+    },
+    {
+      "quote": "Stories are worth telling when they open up questions rather than close them down.",
+      "author": "Megha Majumdar"
+    },
+    {
+      "quote": "Where public feeling goes, the court follows.",
+      "author": "Megha Majumdar",
+      "work": "A Burning"
+    },
+    {
+      "quote": "A woman's love is like the morning dew. It's just as likely to settle on a horse turd as a rose.",
+      "author": "Larry McMurtry",
+      "work": "Leaving Cheyenne"
+    },
+    {
+      "quote": "I don't outline.",
+      "author": "Larry McMurtry"
+    },
+    {
+      "quote": "I just follow my characters wherever they lead me, day by day.",
+      "author": "Larry McMurtry"
+    },
+    {
+      "quote": "Reading is what inspires writing, in my view.",
+      "author": "Larry McMurtry"
+    },
+    {
+      "quote": "Drawing and writing are forms of meditation.",
+      "author": "Thomas Merton"
+    },
+    {
+      "quote": "Learn how to meditate on paper.",
+      "author": "Thomas Merton"
+    },
+    {
+      "quote": "Love is my true identity. Selflessness is my true self.",
+      "author": "Thomas Merton",
+      "work": "Seeds of Contemplation"
+    },
+    {
+      "quote": "My best writing has always been in journals.",
+      "author": "Thomas Merton"
+    },
+    {
+      "quote": "I would think citizens in the United States and every civilized country would consider this honourable.",
+      "author": "Fray Servando Teresa de Mier"
+    },
+    {
+      "quote": "It is true that I was a prisoner of the inquisition.",
+      "author": "Fray Servando Teresa de Mier"
+    },
+    {
+      "quote": "Un Cristo, dos candeleros y tres majaderos.",
+      "author": "Fray Servando Teresa de Mier"
+    },
+    {
+      "quote": "A man may in such a case lose his head and not have harm.",
+      "author": "Sir Thomas More"
+    },
+    {
+      "quote": "For men use, if they have an evil turn, to write it in marble; and whoso doth us a good turn, we write it in dust.",
+      "author": "Sir Thomas More"
+    },
+    {
+      "quote": "I never intend, God being my good Lord, to pin my soul to another man's back.",
+      "author": "Sir Thomas More"
+    },
+    {
+      "quote": "The clearness of my conscience has made my heart hop for joy.",
+      "author": "Sir Thomas More"
+    },
+    {
+      "quote": "For me writing isn't a mental exercise, it's barely even a literary exercise, it feels like a spiritual experience.",
+      "author": "Ottessa Moshfegh"
+    },
+    {
+      "quote": "I can't think without language.",
+      "author": "Ottessa Moshfegh"
+    },
+    {
+      "quote": "Maybe if I can have a spiritual experience through being creative, I'll feel different.",
+      "author": "Ottessa Moshfegh"
+    },
+    {
+      "quote": "One forgets the pain as soon as it's over.",
+      "author": "Ottessa Moshfegh"
+    },
+    {
+      "quote": "In fact, the Native fiction I read made me feel less Native, or more alone.",
+      "author": "Tommy Orange"
+    },
+    {
+      "quote": "The land is everywhere or nowhere.",
+      "author": "Tommy Orange",
+      "work": "There There"
+    },
+    {
+      "quote": "The stories of the people I knew were not represented anywhere.",
+      "author": "Tommy Orange"
+    },
+    {
+      "quote": "There's a monolithic version of what a Native American is supposed to be.",
+      "author": "Tommy Orange"
+    },
+    {
+      "quote": "I don't write in Portuguese. I write myself.",
+      "author": "Fernando Pessoa"
+    },
+    {
+      "quote": "If after I die, people want to write my biography, there is nothing simpler.",
+      "author": "Fernando Pessoa"
+    },
+    {
+      "quote": "My homeland is the Portuguese language.",
+      "author": "Fernando Pessoa",
+      "work": "The Book of Disquiet"
+    },
+    {
+      "quote": "Writing is like paying myself a formal visit.",
+      "author": "Fernando Pessoa"
+    },
+    {
+      "quote": "Any encounter with another human being is an encounter with God.",
+      "author": "Marilynne Robinson"
+    },
+    {
+      "quote": "Any human face is a claim on you, because you can't help but understand the singularity of it, the courage and loneliness of it.",
+      "author": "Marilynne Robinson",
+      "work": "Gilead"
+    },
+    {
+      "quote": "Calvinism was made to evolve.",
+      "author": "Marilynne Robinson"
+    },
+    {
+      "quote": "I think, if people actually read Calvin, rather than read Max Weber, he would be rebranded.",
+      "author": "Marilynne Robinson"
+    },
+    {
+      "quote": "A life in the arts was not a model for me.",
+      "author": "Bryan Washington"
+    },
+    {
+      "quote": "A nondecision is a choice in itself.",
+      "author": "Bryan Washington",
+      "work": "Memorial"
+    },
+    {
+      "quote": "The places we spend a lot of time in continually change in the same way that we change.",
+      "author": "Bryan Washington"
+    },
+    {
+      "quote": "Why sit down to write about people and places you're not interested in?",
+      "author": "Bryan Washington"
+    },
+    {
+      "quote": "My last page is always latent in my first; but the intervening windings of the way become clear only as I write.",
+      "author": "Edith Wharton"
+    },
+    {
+      "quote": "My literary success puzzled and embarrassed my old friends far more than it impressed them.",
+      "author": "Edith Wharton"
+    },
+    {
+      "quote": "Recognition as a writer had transformed my life.",
+      "author": "Edith Wharton"
+    },
+    {
+      "quote": "The only way not to think about money is to have a great deal of it.",
+      "author": "Edith Wharton",
+      "work": "The House of Mirth"
+    },
+    {
+      "quote": "I think he's a real hero.",
+      "author": "John Williams"
+    },
+    {
+      "quote": "It is a novel about a man who finds no meaning in the world or in himself but who does find meaning and a kind of victory in the honest and dogged pursuit of his profession.",
+      "author": "John Williams"
+    },
+    {
+      "quote": "Literature is written to be experienced, not simply to be studied or understood.",
+      "author": "John Williams"
+    },
+    {
+      "quote": "What did you expect?",
+      "author": "John Williams",
+      "work": "Stoner"
+    }
+  ]
+}

@@ -1,63 +1,92 @@
 - name: Home
-  # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
-  # hide-desktop-navigation: true
-  # deploy: 2026-06-25 (stale-while-revalidate proxy)
   columns:
     - size: small
       widgets:
         - type: clock
           hour-format: 12h
 
+        # Cubs command center. Hits statsapi directly — no Worker. The main
+        # request carries NEXT + LAST via schedule hydration (no date math);
+        # the `today` subrequest carries the linescore, which only appears on
+        # the schedule endpoint, for the LIVE case.
         - type: custom-api
           css-class: no-header
           cache: 2m
-          url: ${WORKER_URL}/cubs
-          headers:
-            X-Dashboard-Key: ${DASHBOARD_KEY}
+          # DO NOT "simplify" the nested hydrate: statsapi only returns
+          # probablePitcher when `linescore` precedes it in the list. Both
+          # `hydrate=probablePitcher` alone and `hydrate=probablePitcher,linescore`
+          # silently return no pitcher. Verified 2026-08-05.
+          url: https://statsapi.mlb.com/api/v1/teams/112?hydrate=nextSchedule(limit=1,hydrate=linescore,probablePitcher),previousSchedule(limit=1)
+          subrequests:
+            today:
+              url: https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=112&hydrate=linescore,team
+            standings:
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&standingsTypes=regularSeason
           template: |
+            {{ $next := .JSON.String "teams.0.nextGameSchedule.dates.0.games.0.gameDate" }}
+            {{ $prev := .JSON.String "teams.0.previousGameSchedule.dates.0.games.0.gameDate" }}
+            {{ $today := .Subrequest "today" }}
+            {{ $liveState := $today.JSON.String "dates.0.games.0.status.abstractGameState" }}
+
             <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
               <span class="size-h3 color-highlight">Cubs</span>
-              <span class="size-h6 color-paragraph">{{ .JSON.Int "wins" }}-{{ .JSON.Int "losses" }} · {{ .JSON.String "rank" }} {{ .JSON.String "division" }}</span>
+              {{ range (.Subrequest "standings").JSON.Array "records" }}{{ if eq (.Int "division.id") 205 }}{{ range .Array "teamRecords" }}{{ if eq (.Int "team.id") 112 }}
+              <span class="size-h6 color-paragraph">{{ .Int "wins" }}-{{ .Int "losses" }} · {{ .String "divisionRank" }} NL Central</span>
+              {{ end }}{{ end }}{{ end }}{{ end }}
             </div>
-            {{ if eq (.JSON.String "state") "live" }}
-              <div class="size-h6 color-positive" style="margin-bottom:4px;">● LIVE · {{ .JSON.String "live.inning" }}{{ if .JSON.String "live.outs" }} · {{ .JSON.String "live.outs" }}{{ end }}</div>
+
+            {{ if eq $liveState "Live" }}
+              <div class="size-h6 color-positive" style="margin-bottom:4px;">● LIVE · {{ $today.JSON.String "dates.0.games.0.linescore.currentInningOrdinal" }} · {{ $today.JSON.Int "dates.0.games.0.linescore.outs" }} out</div>
               <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin:6px 0;">
-                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "live.cubsId" }}.svg" style="width:26px;height:26px;">
-                <span class="size-h2 color-highlight">{{ .JSON.Int "live.cubs" }}</span>
+                <img src="https://www.mlbstatic.com/team-logos/{{ $today.JSON.Int "dates.0.games.0.teams.away.team.id" }}.svg" style="width:26px;height:26px;">
+                <span class="size-h2 color-highlight">{{ $today.JSON.Int "dates.0.games.0.teams.away.score" }}</span>
                 <span class="size-h5 color-paragraph">–</span>
-                <span class="size-h2 color-highlight">{{ .JSON.Int "live.opp" }}</span>
-                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "live.oppId" }}.svg" style="width:26px;height:26px;">
+                <span class="size-h2 color-highlight">{{ $today.JSON.Int "dates.0.games.0.teams.home.score" }}</span>
+                <img src="https://www.mlbstatic.com/team-logos/{{ $today.JSON.Int "dates.0.games.0.teams.home.team.id" }}.svg" style="width:26px;height:26px;">
               </div>
-            {{ else if eq (.JSON.String "state") "next" }}
-              <div class="size-h6 color-paragraph">NEXT · {{ .JSON.String "next.date" }} · {{ .JSON.String "next.time" }}</div>
+            {{ else if $next }}
+              <div class="size-h6 color-paragraph">NEXT</div>
               <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin:8px 0;">
-                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "next.cubsId" }}.svg" style="width:26px;height:26px;">
-                <span class="size-h4 color-highlight">CHC</span>
-                <span class="size-h5 color-paragraph">{{ .JSON.String "next.vs" }}</span>
-                <span class="size-h4 color-highlight">{{ .JSON.String "next.oppAbbrev" }}</span>
-                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "next.oppId" }}.svg" style="width:26px;height:26px;">
+                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "teams.0.nextGameSchedule.dates.0.games.0.teams.away.team.id" }}.svg" style="width:26px;height:26px;">
+                <span class="size-h5 color-highlight">{{ .JSON.String "teams.0.nextGameSchedule.dates.0.games.0.teams.away.team.name" }}</span>
+                <span class="size-h6 color-paragraph">@</span>
+                <span class="size-h5 color-highlight">{{ .JSON.String "teams.0.nextGameSchedule.dates.0.games.0.teams.home.team.name" }}</span>
+                <img src="https://www.mlbstatic.com/team-logos/{{ .JSON.Int "teams.0.nextGameSchedule.dates.0.games.0.teams.home.team.id" }}.svg" style="width:26px;height:26px;">
               </div>
-              <div class="size-h6 color-paragraph" style="text-align:center;">{{ .JSON.String "next.cubsSP" }} · {{ .JSON.String "next.oppSP" }}</div>
-              {{ if .JSON.String "next.venue" }}<div class="size-h6 color-paragraph" style="text-align:center; opacity:.6;">{{ .JSON.String "next.venue" }}</div>{{ end }}
+              <div class="size-h6 color-paragraph" style="text-align:center;">
+                {{ .JSON.String "teams.0.nextGameSchedule.dates.0.games.0.teams.away.probablePitcher.fullName" }} · {{ .JSON.String "teams.0.nextGameSchedule.dates.0.games.0.teams.home.probablePitcher.fullName" }}
+              </div>
+              <div class="size-h6 color-paragraph" style="text-align:center; opacity:.6;">{{ .JSON.String "teams.0.nextGameSchedule.dates.0.games.0.venue.name" }}</div>
             {{ end }}
-            {{ if .JSON.String "last.decision" }}
-              <div style="border-top:1px solid rgba(255,255,255,0.08); margin-top:10px; padding-top:8px;">
+
+            {{ if $prev }}
+              <div style="border-top:1px solid rgba(255,255,255,0.08); margin-top:10px; padding-top:8px; text-align:center;">
                 <span class="size-h6 color-paragraph">LAST</span>
-                <span class="size-h5 {{ if eq (.JSON.String "last.decision") "W" }}color-positive{{ else }}color-negative{{ end }}">{{ .JSON.String "last.decision" }} {{ .JSON.String "last.score" }}</span>
-                <span class="size-h6 color-paragraph">{{ .JSON.String "last.vs" }} {{ .JSON.String "last.oppAbbrev" }} · {{ .JSON.String "last.day" }}</span>
+                <div class="size-h5 color-highlight">
+                  {{ .JSON.String "teams.0.previousGameSchedule.dates.0.games.0.teams.away.team.name" }} {{ .JSON.Int "teams.0.previousGameSchedule.dates.0.games.0.teams.away.score" }}
+                  –
+                  {{ .JSON.Int "teams.0.previousGameSchedule.dates.0.games.0.teams.home.score" }} {{ .JSON.String "teams.0.previousGameSchedule.dates.0.games.0.teams.home.team.name" }}
+                </div>
               </div>
             {{ end }}
 
+        # Division standings. NOTE: statsapi IGNORES the divisionId parameter —
+        # it always returns all three divisions of the league. The old config
+        # indexed records.0/1/2 positionally, which worked only by luck; these
+        # select on division.id instead, so a change in API ordering can't
+        # silently show the wrong division.
+        #   NL 104: East 204, Central 205, West 203
+        #   AL 103: East 201, Central 202, West 200
         - type: group
           css-class: mo-mlb
           widgets:
             - type: custom-api
               title: NL Central
-              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&divisionId=205&standingsTypes=regularSeason
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&standingsTypes=regularSeason
               cache: 15m
               template: |
                 <ul class="list list-gap-10">
-                  {{ range .JSON.Array "records.1.teamRecords" }}
+                  {{ range .JSON.Array "records" }}{{ if eq (.Int "division.id") 205 }}{{ range .Array "teamRecords" }}
                   <li class="flex items-center gap-15">
                     <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                       <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
@@ -73,15 +102,15 @@
                       </div>
                     </div>
                   </li>
-                  {{ end }}
+                  {{ end }}{{ end }}{{ end }}
                 </ul>
             - type: custom-api
               title: AL Central
-              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&divisionId=202&standingsTypes=regularSeason
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&standingsTypes=regularSeason
               cache: 15m
               template: |
                 <ul class="list list-gap-10">
-                  {{ range .JSON.Array "records.1.teamRecords" }}
+                  {{ range .JSON.Array "records" }}{{ if eq (.Int "division.id") 202 }}{{ range .Array "teamRecords" }}
                   <li class="flex items-center gap-15">
                     <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                       <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
@@ -97,15 +126,15 @@
                       </div>
                     </div>
                   </li>
-                  {{ end }}
+                  {{ end }}{{ end }}{{ end }}
                 </ul>
             - type: custom-api
               title: NL East
-              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&divisionId=204&standingsTypes=regularSeason
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&standingsTypes=regularSeason
               cache: 15m
               template: |
                 <ul class="list list-gap-10">
-                  {{ range .JSON.Array "records.0.teamRecords" }}
+                  {{ range .JSON.Array "records" }}{{ if eq (.Int "division.id") 204 }}{{ range .Array "teamRecords" }}
                   <li class="flex items-center gap-15">
                     <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                       <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
@@ -121,15 +150,15 @@
                       </div>
                     </div>
                   </li>
-                  {{ end }}
+                  {{ end }}{{ end }}{{ end }}
                 </ul>
             - type: custom-api
               title: AL East
-              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&divisionId=201&standingsTypes=regularSeason
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&standingsTypes=regularSeason
               cache: 15m
               template: |
                 <ul class="list list-gap-10">
-                  {{ range .JSON.Array "records.0.teamRecords" }}
+                  {{ range .JSON.Array "records" }}{{ if eq (.Int "division.id") 201 }}{{ range .Array "teamRecords" }}
                   <li class="flex items-center gap-15">
                     <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                       <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
@@ -145,15 +174,15 @@
                       </div>
                     </div>
                   </li>
-                  {{ end }}
+                  {{ end }}{{ end }}{{ end }}
                 </ul>
             - type: custom-api
               title: NL West
-              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&divisionId=203&standingsTypes=regularSeason
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=104&standingsTypes=regularSeason
               cache: 15m
               template: |
                 <ul class="list list-gap-10">
-                  {{ range .JSON.Array "records.2.teamRecords" }}
+                  {{ range .JSON.Array "records" }}{{ if eq (.Int "division.id") 203 }}{{ range .Array "teamRecords" }}
                   <li class="flex items-center gap-15">
                     <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                       <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
@@ -169,15 +198,15 @@
                       </div>
                     </div>
                   </li>
-                  {{ end }}
+                  {{ end }}{{ end }}{{ end }}
                 </ul>
             - type: custom-api
               title: AL West
-              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&divisionId=200&standingsTypes=regularSeason
+              url: https://statsapi.mlb.com/api/v1/standings?leagueId=103&standingsTypes=regularSeason
               cache: 15m
               template: |
                 <ul class="list list-gap-10">
-                  {{ range .JSON.Array "records.2.teamRecords" }}
+                  {{ range .JSON.Array "records" }}{{ if eq (.Int "division.id") 200 }}{{ range .Array "teamRecords" }}
                   <li class="flex items-center gap-15">
                     <div class="flex-shrink-0" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                       <img src="https://www.mlbstatic.com/team-logos/{{ .Int "team.id" }}.svg" style="width: 28px; height: 28px;" alt="{{ .String "team.name" }}">
@@ -193,9 +222,13 @@
                       </div>
                     </div>
                   </li>
-                  {{ end }}
+                  {{ end }}{{ end }}{{ end }}
                 </ul>
 
+        # Calendar agenda. STILL VIA THE WORKER, deliberately: Glance's native
+        # `calendar` widget is a month grid with no event support, and custom-api
+        # templates JSON, not ICS. The Worker's /calendar is an ICS->JSON
+        # transformer, not an HF workaround, so it survives the move.
         - type: custom-api
           css-class: mo-upcoming
           title: Upcoming
@@ -203,7 +236,14 @@
           url: ${WORKER_URL}/calendar?limit=12&days=45
           headers:
             X-Dashboard-Key: ${DASHBOARD_KEY}
+          # A non-200 (e.g. a DASHBOARD_KEY mismatch with the Worker) otherwise
+          # renders as an empty `events` array, which looks identical to a
+          # genuinely clear calendar. Say so out loud instead — a silent empty
+          # state hides a broken key.
           template: |
+            {{ if ne .Response.StatusCode 200 }}
+              <p class="color-negative">Calendar unavailable — Worker returned HTTP {{ .Response.StatusCode }}.</p>
+            {{ else }}
             {{ $events := .JSON.Array "events" }}
             {{ if eq (len $events) 0 }}
               <p class="color-paragraph" style="opacity:.6">Nothing on the calendar.</p>
@@ -225,6 +265,7 @@
               {{ end }}
             </ul>
             {{ end }}
+            {{ end }}
 
     - size: full
       widgets:
@@ -240,9 +281,11 @@
             ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝</pre>
             </div>
 
+        # Marginalia now reads a static corpus from /assets/marginalia.json —
+        # no network hop. See assets/marginalia.js.
         - type: html
           source: |
-            <div id="mg-app" data-worker="${WORKER_URL}" data-key="${DASHBOARD_KEY}">
+            <div id="mg-app">
               <div class="color-paragraph" style="text-align:center; opacity:.4; padding:8px;">&hellip;</div>
             </div>
 
@@ -279,14 +322,19 @@
                   title: LitHub
                 - url: https://maudlinhouse.net/feed/
                   title: Maudlin House
-                - url: https://www.bookforum.com/rss.xml
-                  title: Bookforum
-            - type: rss
+                # Bookforum's feed answers HTTP 200 with a ZERO-BYTE body, so
+                # Glance logs "Failed to detect feed type" and shows an error
+                # box. Dead upstream, not a config problem. Re-enable if it
+                # ever starts serving content again.
+                # - url: https://www.bookforum.com/rss.xml
+                #   title: Bookforum
+            # Glance's purpose-built HN widget rather than `rss` on HN's feed —
+            # it carries points and comment counts, which plain RSS can't.
+            # (AP and Google News below stay `rss`; Glance has no native
+            # equivalent for those.)
+            - type: hacker-news
               title: Mainframe
               limit: 20
-              feeds:
-                - url: https://news.ycombinator.com/rss
-                  title: HN
             - type: rss
               title: News
               limit: 20
@@ -299,101 +347,79 @@
                   title: Google News
                   limit: 10
 
-        # YouTube via Worker /youtube (keyless): HF datacenter IP can't fetch
-        # youtube.com RSS directly, so the Worker fetches all channels, merges +
-        # sorts by newest, returns JSON. Channels are passed in the URL.
-        - type: custom-api
+        # Native `videos` widget - YouTube RSS, no API key, no Worker.
+        - type: videos
           css-class: mo-youtube
           title: YouTube
+          style: horizontal-cards
+          limit: 20
           cache: 1h
-          url: ${WORKER_URL}/youtube?channels=UCNUbP4RR0F25OmskaIcwMUw,UCqxkMCK3t6bTfsozawzU2VA,UCZguEMl05Ft8zZ60YeD-GJQ,UCBEGcyJUC-0SFTJ1t45yOzw,UCklYWGTK7sMAN5SBklO-nTw,UCttffEucm1BxYqrQsdzs6pQ&limit=20
-          template: |
-            <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin;">
-              {{ range .JSON.Array "items" }}
-                <a href="https://www.youtube.com/watch?v={{ .String "videoId" }}" target="_blank" style="flex-shrink: 0; width: 220px; text-decoration: none; display: block;">
-                  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <img src="{{ .String "thumbnail" }}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" alt="Thumbnail">
-                    <div style="padding: 10px;">
-                      <div class="size-h6 color-highlight text-truncate" style="margin-bottom: 4px;">{{ .String "title" }}</div>
-                      <div class="size-h6 color-paragraph text-truncate" style="opacity: 0.6;">{{ .String "channel" }}</div>
-                    </div>
-                  </div>
-                </a>
-              {{ end }}
-            </div>
+          channels:
+            - UCNUbP4RR0F25OmskaIcwMUw
+            - UCqxkMCK3t6bTfsozawzU2VA
+            # Rainfall Projects — the channel exists but has NO uploads
+            # playlist (UULFZguEMl05Ft8zZ60YeD-GJQ 404s), i.e. zero public
+            # videos, so Glance flags "missing videos from 1 channels" on
+            # every render. Re-enable when the channel posts something.
+            # - UCZguEMl05Ft8zZ60YeD-GJQ
+            - UCBEGcyJUC-0SFTJ1t45yOzw
+            - UCklYWGTK7sMAN5SBklO-nTw
+            - UCttffEucm1BxYqrQsdzs6pQ
 
+        # Native `reddit` widgets. Glance v0.8.5's bypass works from VISTA's
+        # residential IP — verified in-container — so the Worker's /reddit
+        # RSS-conversion endpoint is retired.
         - type: group
           css-class: mo-reddit
           widgets:
-            - type: rss
-              title: r/CHICubs
+            - type: reddit
+              subreddit: CHICubs
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=CHICubs
-            - type: rss
-              title: r/mlb
+            - type: reddit
+              subreddit: mlb
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=mlb
-            - type: rss
-              title: r/roanoke
+            - type: reddit
+              subreddit: roanoke
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=roanoke
-            - type: rss
-              title: r/typewriters
+            - type: reddit
+              subreddit: typewriters
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=typewriters
-            - type: rss
-              title: r/stationery
+            - type: reddit
+              subreddit: stationery
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=stationery
-            - type: rss
-              title: r/virginia
+            - type: reddit
+              subreddit: virginia
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=virginia
-            - type: rss
-              title: r/WritingHub
+            - type: reddit
+              subreddit: WritingHub
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=WritingHub
-            - type: rss
-              title: r/Wildcats
+            - type: reddit
+              subreddit: Wildcats
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=Wildcats
-            - type: rss
-              title: r/cyberDeck
+            - type: reddit
+              subreddit: cyberDeck
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=cyberDeck
-            - type: rss
-              title: r/BookshelvesDetective
+            - type: reddit
+              subreddit: BookshelvesDetective
               style: horizontal-cards
               limit: 10
-              feeds:
-                - url: https://sassafras-proxy.toyo7m.workers.dev/reddit?sub=BookshelvesDetective
+
 
     - size: small
       widgets:
         - type: weather
           location: Radford, Virginia, United States
-          units: imperial # alternatively "metric"
-          hour-format: 12h # alternatively "24h"
-          # Optionally hide the location from being displayed in the widget
-          # hide-location: true
+          units: imperial
+          hour-format: 12h
 
         - type: search
           css-class: r-gap
@@ -401,21 +427,30 @@
           placeholder: Search Google...
           new-tab: true
 
+        # Served locally again — the GitHub-raw workaround existed only because
+        # HF stored the GIF as a Git LFS pointer and baked the 132-byte stub
+        # into the image.
         - type: html
+          css-class: mo-companion
           title: Companion
-          # Loaded from the GitHub raw URL, not /assets/whale.gif: Hugging Face stores
-          # the GIF as a Git LFS pointer in the Space repo, and the Docker build bakes
-          # in the 132-byte pointer (LFS isn't resolved at build time) — so the served
-          # file is a broken stub. GitHub raw serves the real binary directly.
           source: |
-            <img src="https://raw.githubusercontent.com/toyo7m/my-glance-dashboard/main/assets/whale.gif"
+            <img src="/assets/whale.gif"
                  style="width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 14px; opacity: 0.9;"
                  alt="Companion">
 
+        # Interactive Todoist list. STILL VIA THE WORKER, deliberately: the
+        # Worker holds the Todoist API token, which cannot live in browser JS,
+        # and Glance's native `todo` widget is localStorage-only with no sync.
         - type: html
           title: Tasks
           source: |
-            <div id="td-app" data-worker="${WORKER_URL}" data-key="${DASHBOARD_KEY}" style="margin-top: 14px;">
+            <!-- data-worker is the SAME-ORIGIN Caddy relay (/worker/* ->
+                 sassafras-proxy), not the Worker's own hostname. The Worker
+                 still sends Access-Control-Allow-Origin for the old Hugging
+                 Face Space, so a direct cross-origin fetch from here is
+                 blocked by the browser. Going through the relay sidesteps
+                 CORS entirely. -->
+            <div id="td-app" data-worker="/worker" data-key="${DASHBOARD_KEY}" style="margin-top: 14px;">
               <form id="td-add" autocomplete="off">
                 <input id="td-input" type="text" placeholder="+ Add a task…" maxlength="500" />
               </form>
